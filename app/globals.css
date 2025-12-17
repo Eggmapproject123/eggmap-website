@@ -1,0 +1,73 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap"); 
+@font-face {
+  font-family: 'SpicySale';
+  src: url('/fonts/SpicySale.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+} 
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #e8daf9;
+  color: #4b0082;
+}
+
+/* Prevent blinking text cursor on all text */
+*:not(input):not(textarea) {
+  caret-color: transparent !important;
+  user-select: none;
+} 
+
+button {
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+} 
+@keyframes hatchWiggle {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-3px) rotate(-4deg); }
+  40%  { transform: translateX(3px) rotate(4deg); }
+  60%  { transform: translateX(-2px) rotate(-3deg); }
+  80%  { transform: translateX(2px) rotate(3deg); }
+  100% { transform: translateX(0); }
+} 
+@keyframes jellySquish {
+  0%   { transform: scale(1, 1); }
+  25%  { transform: scale(1.15, 0.85); }
+  55%  { transform: scale(0.92, 1.08); }
+  75%  { transform: scale(1.05, 0.95); }
+  100% { transform: scale(1, 1); }
+} 
+@keyframes glowPulse {
+  0% {
+    opacity: 0;
+    box-shadow: 0 0 0 rgba(255,255,255,0);
+    transform: translateY(-6px);
+  }
+  60% {
+    opacity: 1;
+    box-shadow: 0 0 18px rgba(255,255,255,0.75);
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 6px rgba(255,255,255,0.35);
+    transform: translateY(0);
+  }
+} 
+@keyframes fadeInSoft {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
