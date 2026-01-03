@@ -46,15 +46,22 @@ export default function HatchingPopup() {
     setPopupOpen(false);
   };
 
-  const handleAddToCalendar = () => {
-    const url =
-      "https://www.google.com/calendar/render?action=TEMPLATE" +
-      "&text=EggMap%20Launch" +
-      "&dates=20260315T090000Z/20260315T100000Z" +
-      "&details=EggMap%20is%20hatching!%20Come%20back%20and%20see%20all%20the%20local%20egg%20stands." +
-      "&sf=true&output=xml";
-    window.open(url, "_blank");
-  };
+const handleAddToCalendar = () => {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", "add_to_calendar_click", {
+      event_category: "engagement",
+      event_label: "hatching_popup",
+    });
+  }
+
+  const url =
+    "https://www.google.com/calendar/render?action=TEMPLATE" +
+    "&text=EggMap%20Launch" +
+    "&dates=20260315T090000Z/20260315T100000Z" +
+    "&details=EggMap%20is%20hatching!%20Come%20back%20and%20see%20all%20the%20local%20egg%20stands." +
+    "&sf=true&output=xml";
+  window.open(url, "_blank");
+}; 
 
   if (!popupOpen) return null;
 
