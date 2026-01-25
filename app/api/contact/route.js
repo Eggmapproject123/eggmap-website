@@ -2,8 +2,6 @@ export const runtime = "nodejs";
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req) {
   try {
     const { name, email, phone, message } = await req.json();
@@ -23,10 +21,13 @@ export async function POST(req) {
       );
     }
 
+    // ✅ Create Resend INSIDE the request handler
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     await resend.emails.send({
-      from: "Resend <onboarding@resend.dev>",
+      from: "EggMap <onboarding@resend.dev>",
       to: process.env.EMAIL_TO,
-      reply_to: email,
+      replyTo: email,
       subject: "New Contact Form Submission",
       text: `Name: ${name}
 Email: ${email}
