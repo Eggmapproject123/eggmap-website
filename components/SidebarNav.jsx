@@ -120,6 +120,10 @@ export default function SidebarNav() {
             <Link href="/contact" style={linkStyle} onClick={closeMenu}>
               Contact Us
             </Link>
+
+            <Link href="/privacy" style={linkStyle} onClick={closeMenu}>
+              Privacy Policy
+            </Link>
           </div>
         )}
       </div>
