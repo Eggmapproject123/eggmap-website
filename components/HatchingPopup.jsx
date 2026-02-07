@@ -195,10 +195,9 @@ export default function HatchingPopup() {
             boxShadow: "0 0 6px rgba(0,0,0,0.04)",
           }}
         >
-          <strong style={{ color: "#ff0000ff" }}>*Unavailable until April 15, 2026*</strong>
+          <strong style={{ color: "#ff0000ff" }}>Unavailable until April 15, 2026</strong>
           <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>
-            <li>See all the local Egg stands in your area!</li>
-            <li>Get directions to any stand instantly- support small businesses and ethically sourced eggs!</li>
+           
           </ul>
 
           <p style={{ marginTop: "8px", marginBottom: 0 }}>
