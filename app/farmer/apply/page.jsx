@@ -165,7 +165,7 @@ export default function VerifiedFarmerPage() {
             }}
           >
             <p style={{ fontSize: "17px", marginBottom: "16px" }}>
-              EggMap officially launches <strong>March 15, 2026</strong>.
+              EggMap officially launches <strong>April 15, 2026</strong>.
               Verified Farmer applications will open at launch.
             </p>
 

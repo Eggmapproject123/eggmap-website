@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-const LAUNCH_DATE = new Date("2026-03-15T09:00:00").getTime();
+// Single source of truth for public launch moment (UTC)
+const LAUNCH_DATE = new Date("2026-04-15T09:00:00").getTime();
 
 export default function HatchingPopup() {
   const [popupOpen, setPopupOpen] = useState(false);
@@ -46,22 +47,25 @@ export default function HatchingPopup() {
     setPopupOpen(false);
   };
 
-const handleAddToCalendar = () => {
-  if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", "add_to_calendar_click", {
-      event_category: "engagement",
-      event_label: "hatching_popup",
-    });
-  }
+  const handleAddToCalendar = () => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.gtag === "function"
+    ) {
+      window.gtag("event", "add_to_calendar_click", {
+        event_category: "engagement",
+        event_label: "hatching_popup",
+      });
+    }
 
-  const url =
-    "https://www.google.com/calendar/render?action=TEMPLATE" +
-    "&text=EggMap%20Launch" +
-    "&dates=20260315T090000Z/20260315T100000Z" +
-    "&details=EggMap%20is%20hatching!%20Come%20back%20and%20see%20all%20the%20local%20egg%20stands." +
-    "&sf=true&output=xml";
-  window.open(url, "_blank");
-}; 
+    const url =
+      "https://www.google.com/calendar/render?action=TEMPLATE" +
+      "&text=EggMap%20Launch" +
+      "&dates=20260415T090000Z/20260415T100000Z" +
+      "&details=EggMap%20is%20hatching!%20Come%20back%20and%20see%20all%20the%20local%20egg%20stands." +
+      "&sf=true&output=xml";
+    window.open(url, "_blank");
+  };
 
   if (!popupOpen) return null;
 
@@ -142,7 +146,7 @@ const handleAddToCalendar = () => {
             textShadow: "0 0 4px rgba(18,227,84,0.4)",
           }}
         >
-          Launching March 15th – 2026!
+          Launching April 15th – 2026!
         </p>
 
         {/* Green box: ONLY the 3 bullets */}
@@ -191,15 +195,13 @@ const handleAddToCalendar = () => {
             boxShadow: "0 0 6px rgba(0,0,0,0.04)",
           }}
         >
-          <strong style={{ color: "#ff0000ff" }}>Unavailable until March 15, 2026:</strong>
+          <strong style={{ color: "#ff0000ff" }}>Unavailable until April 15, 2026:</strong>
           <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>
             <li>Verified Farmer applications</li>
             <li>Online ordering & payments</li>
-            <li>Account creation (may be available in January)</li>
           </ul>
 
           <p style={{ marginTop: "8px", marginBottom: 0 }}>
-            The EggMap app is expected in the App Store around <strong>late January</strong>.
           </p>
         </div>
 
