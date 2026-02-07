@@ -97,18 +97,6 @@ export default function SidebarNav() {
   How It Works
 </Link>
 
-<Link
-  href="#"
-  style={linkStyle}
-  onClick={(e) => {
-    e.preventDefault();
-    window.dispatchEvent(new Event("openHatchingPopup"));
-    closeMenu();
-  }}
->
-  Create Account
-</Link> 
-
             <Link href="/farmer/apply" style={linkStyle} onClick={closeMenu}>
               Become a Verified Farmer
             </Link>
@@ -123,6 +111,18 @@ export default function SidebarNav() {
 
             <Link href="/privacy" style={linkStyle} onClick={closeMenu}>
               Privacy Policy
+            </Link>
+
+            <Link
+              href="#"
+              style={linkStyle}
+              onClick={(e) => {
+                e.preventDefault();
+                window.dispatchEvent(new Event("openHatchingPopup"));
+                closeMenu();
+              }}
+            >
+              Create Account
             </Link>
           </div>
         )}
