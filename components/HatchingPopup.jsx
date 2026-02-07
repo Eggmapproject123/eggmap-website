@@ -195,7 +195,16 @@ export default function HatchingPopup() {
             boxShadow: "0 0 6px rgba(0,0,0,0.04)",
           }}
         >
-          <strong style={{ color: "#ff0000ff" }}>Unavailable until April 15, 2026</strong>
+          <strong
+            style={{
+              color: "#ff0000ff",
+              display: "block",
+              textAlign: "center",
+              marginBottom: "8px",
+            }}
+          >
+            Unavailable until April 15, 2026
+          </strong>
           <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>
            
           </ul>
