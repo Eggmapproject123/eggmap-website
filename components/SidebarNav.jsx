@@ -117,6 +117,10 @@ export default function SidebarNav() {
           <div style={{ marginTop: "10px", fontFamily: "'Fredoka', sans-serif" }}>
             <Link href="/" style={linkStyle} onClick={closeMenu}>Home</Link>
 
+            <Link href="/stand/test123" style={linkStyle} onClick={closeMenu}>
+              Stand Test
+            </Link>
+
             <Link
               href="#"
               style={linkStyle}
