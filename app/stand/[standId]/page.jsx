@@ -5,19 +5,119 @@ import { useState } from "react";
 export default function StandPage({ params }) {
   const { standId } = params;
   const [showOtherItems, setShowOtherItems] = useState(false);
+  const [quantities, setQuantities] = useState({});
 
   const eggItems = [
-    { name: "Chicken Eggs", price: "$5", unit: "dozen" },
-    { name: "Duck Eggs", price: "$7", unit: "dozen" },
-    { name: "Quail Eggs", price: "$6", unit: "dozen" },
-    { name: "Goose Eggs", price: "$8", unit: "dozen" },
+    {
+      name: "Chicken Eggs",
+      variants: [
+        { label: "Dozen", price: 5 },
+        { label: "Half Dozen", price: 3 },
+      ],
+    },
+    {
+      name: "Duck Eggs",
+      variants: [{ label: "Dozen", price: 7 }],
+    },
+    {
+      name: "Quail Eggs",
+      variants: [{ label: "Dozen", price: 6 }],
+    },
+    {
+      name: "Goose Eggs",
+      variants: [{ label: "Dozen", price: 8 }],
+    },
   ];
 
   const otherItems = [
-    { name: "Bread", price: "$7.50" },
-    { name: "Cake Pops", price: "$7" },
-    { name: "Maple Syrup", price: "$12" },
+    { name: "Bread", price: 7.5 },
+    { name: "Cake Pops", price: 7 },
+    { name: "Maple Syrup", price: 12 },
   ];
+
+  const eggVariantItems = eggItems.flatMap((item) =>
+    item.variants.map((variant) => ({
+      id: `${item.name}__${variant.label}`,
+      name: item.name,
+      variant: variant.label,
+      price: variant.price,
+    }))
+  );
+
+  const otherFlatItems = otherItems.map((item) => ({
+    id: item.name,
+    name: item.name,
+    variant: null,
+    price: item.price,
+  }));
+
+  const allItems = [...eggVariantItems, ...otherFlatItems];
+
+  const adjustQuantity = (id, delta) => {
+    setQuantities((prev) => {
+      const next = { ...prev };
+      const current = next[id] || 0;
+      const updated = Math.max(0, current + delta);
+
+      if (updated === 0) {
+        delete next[id];
+      } else {
+        next[id] = updated;
+      }
+
+      return next;
+    });
+  };
+
+  const formatPrice = (value) => {
+    if (Number.isInteger(value)) return `$${value}`;
+    return `$${value.toFixed(2)}`;
+  };
+
+  const cartItems = allItems
+    .filter((item) => (quantities[item.id] || 0) > 0)
+    .map((item) => ({
+      ...item,
+      qty: quantities[item.id],
+    }));
+
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
+
+  const handleCheckout = () => {
+    const payload = {
+      items: cartItems.map((item) => ({
+        name: item.name,
+        variant: item.variant || undefined,
+        qty: item.qty,
+        price: item.price,
+      })),
+      total: Math.round(total * 100) / 100,
+    };
+
+    payload.items = payload.items.map((item) => {
+      if (!item.variant) {
+        const { variant, ...rest } = item;
+        return rest;
+      }
+      return item;
+    });
+
+    console.log(payload);
+  };
+
+  const quantityButtonStyle = {
+    width: "28px",
+    height: "28px",
+    borderRadius: "8px",
+    border: "1px solid #cceae1",
+    background: "#ffffff",
+    color: "#0f3a35",
+    fontWeight: 700,
+    cursor: "pointer",
+  };
 
   return (
     <div
@@ -46,24 +146,61 @@ export default function StandPage({ params }) {
         >
           <h2 style={{ margin: 0, fontSize: "20px" }}>Eggs</h2>
           <div style={{ marginTop: "14px", display: "grid", gap: "12px" }}>
-            {eggItems.map((item) => (
-              <div
-                key={item.name}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "12px 14px",
-                  background: "#eafff7",
-                  borderRadius: "12px",
-                }}
-              >
-                <span style={{ fontWeight: 600 }}>{item.name}</span>
-                <span style={{ color: "#1c5e57" }}>
-                  {item.price} / {item.unit}
-                </span>
-              </div>
-            ))}
+            {eggVariantItems.map((item) => {
+              const qty = quantities[item.id] || 0;
+
+              return (
+                <div
+                  key={item.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "12px 14px",
+                    background: "#eafff7",
+                    borderRadius: "12px",
+                    gap: "12px",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 600 }}>{item.name}</div>
+                    <div style={{ color: "#1c5e57", fontSize: "14px" }}>
+                      {item.variant} — {formatPrice(item.price)}
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => adjustQuantity(item.id, -1)}
+                      disabled={qty === 0}
+                      style={{
+                        ...quantityButtonStyle,
+                        opacity: qty === 0 ? 0.5 : 1,
+                        cursor: qty === 0 ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      -
+                    </button>
+                    <span style={{ minWidth: "20px", textAlign: "center" }}>
+                      {qty}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => adjustQuantity(item.id, 1)}
+                      style={quantityButtonStyle}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -100,28 +237,118 @@ export default function StandPage({ params }) {
 
             {showOtherItems && (
               <div style={{ marginTop: "16px", display: "grid", gap: "10px" }}>
-                {otherItems.map((item) => (
-                  <div
-                    key={item.name}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      padding: "10px 12px",
-                      background: "#f3fffb",
-                      borderRadius: "12px",
-                    }}
-                  >
-                    <span style={{ fontWeight: 600 }}>{item.name}</span>
-                    <span style={{ color: "#1c5e57" }}>{item.price}</span>
-                  </div>
-                ))}
+                {otherFlatItems.map((item) => {
+                  const qty = quantities[item.id] || 0;
+
+                  return (
+                    <div
+                      key={item.id}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "10px 12px",
+                        background: "#f3fffb",
+                        borderRadius: "12px",
+                        gap: "12px",
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 600 }}>{item.name}</div>
+                        <div style={{ color: "#1c5e57", fontSize: "14px" }}>
+                          {formatPrice(item.price)}
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => adjustQuantity(item.id, -1)}
+                          disabled={qty === 0}
+                          style={{
+                            ...quantityButtonStyle,
+                            opacity: qty === 0 ? 0.5 : 1,
+                            cursor: qty === 0 ? "not-allowed" : "pointer",
+                          }}
+                        >
+                          -
+                        </button>
+                        <span style={{ minWidth: "20px", textAlign: "center" }}>
+                          {qty}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => adjustQuantity(item.id, 1)}
+                          style={quantityButtonStyle}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </section>
         )}
 
+        <section
+          style={{
+            background: "#ffffff",
+            padding: "22px",
+            borderRadius: "16px",
+            boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
+            marginBottom: "24px",
+          }}
+        >
+          <h2 style={{ margin: 0, fontSize: "20px" }}>Cart</h2>
+          {cartItems.length === 0 ? (
+            <p style={{ marginTop: "10px", color: "#3e6b64" }}>
+              No items selected yet.
+            </p>
+          ) : (
+            <div style={{ marginTop: "12px", display: "grid", gap: "8px" }}>
+              {cartItems.map((item) => (
+                <div
+                  key={`${item.id}-cart`}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontWeight: 600,
+                  }}
+                >
+                  <span>
+                    {item.name}
+                    {item.variant ? ` (${item.variant})` : ""} ×{item.qty}
+                  </span>
+                  <span>{formatPrice(item.price * item.qty)}</span>
+                </div>
+              ))}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderTop: "1px solid #e1f2ec",
+                  paddingTop: "10px",
+                  marginTop: "6px",
+                  fontWeight: 700,
+                }}
+              >
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+            </div>
+          )}
+        </section>
+
         <button
           type="button"
+          onClick={handleCheckout}
           style={{
             width: "100%",
             padding: "14px 18px",
