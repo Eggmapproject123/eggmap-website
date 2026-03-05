@@ -12,6 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@stripe/react-stripe-js": "^2.9.0",
+    "@stripe/stripe-js": "^4.2.0",
     "next": "^16.0.7",
     "nodemailer": "^7.0.11",
     "react": "^19.2.1",

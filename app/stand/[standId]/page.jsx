@@ -87,25 +87,17 @@ export default function StandPage({ params }) {
   );
 
   const handleCheckout = () => {
-    const payload = {
-      items: cartItems.map((item) => ({
-        name: item.name,
-        variant: item.variant || undefined,
-        qty: item.qty,
-        price: item.price,
-      })),
-      total: Math.round(total * 100) / 100,
-    };
+    const cartPayload = cartItems.map((item) => ({
+      id: item.id,
+      name: item.name,
+      variantLabel: item.variant || null,
+      unitPriceCents: Math.round(item.price * 100),
+      qty: item.qty,
+    }));
 
-    payload.items = payload.items.map((item) => {
-      if (!item.variant) {
-        const { variant, ...rest } = item;
-        return rest;
-      }
-      return item;
-    });
-
-    console.log(payload);
+    sessionStorage.setItem("eggmap_cart", JSON.stringify(cartPayload));
+    sessionStorage.setItem("eggmap_stand_id", standId);
+    window.location.href = "/pay";
   };
 
   const quantityButtonStyle = {
