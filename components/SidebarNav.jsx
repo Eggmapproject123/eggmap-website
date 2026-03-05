@@ -21,6 +21,18 @@ export default function SidebarNav() {
     }
   };
 
+  const handleStripeOnboarding = async () => {
+    const res = await fetch("/api/create-connect-account", {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    }
+  };
+
   const linkStyle = {
     display: "block",
     padding: "12px 20px",
@@ -122,6 +134,17 @@ export default function SidebarNav() {
 
             <Link href="/farmer/apply" style={linkStyle} onClick={closeMenu}>
               Become a Verified Farmer
+            </Link>
+
+            <Link
+              href="#"
+              style={linkStyle}
+              onClick={(e) => {
+                e.preventDefault();
+                handleStripeOnboarding();
+              }}
+            >
+              Become a Seller (Stripe Test)
             </Link>
 
             <Link href="/faq" style={linkStyle} onClick={closeMenu}>
