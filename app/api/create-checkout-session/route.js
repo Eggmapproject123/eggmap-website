@@ -3,7 +3,7 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
-  const origin = request.headers.get("origin");
+  const origin = "https://www.eggmapmobile.com";
 
   const session = await stripe.checkout.sessions.create({
     mode: "payment",

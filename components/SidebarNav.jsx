@@ -9,6 +9,18 @@ export default function SidebarNav() {
     if (isMenuOpen) toggleMenu();
   };
 
+  const handleTestCheckout = async () => {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    }
+  };
+
   const linkStyle = {
     display: "block",
     padding: "12px 20px",
@@ -92,6 +104,17 @@ export default function SidebarNav() {
         {isMenuOpen && (
           <div style={{ marginTop: "10px", fontFamily: "'Fredoka', sans-serif" }}>
             <Link href="/" style={linkStyle} onClick={closeMenu}>Home</Link>
+
+            <Link
+              href="#"
+              style={linkStyle}
+              onClick={(e) => {
+                e.preventDefault();
+                handleTestCheckout();
+              }}
+            >
+              Test Payment
+            </Link>
 
 <Link href="/how-it-works" style={linkStyle} onClick={closeMenu}>
   How It Works

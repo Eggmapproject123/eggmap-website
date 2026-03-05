@@ -13,24 +13,24 @@ const cherry = Cherry_Bomb_One({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={cherry.variable}>
-      {/* Google Analytics */}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-8QV64D3784"
-        strategy="afterInteractive"
-      />
-      <Script id="ga-init" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', 'G-8QV64D3784', {
-            send_page_view: true
-          });
-        `}
-      </Script>
-
       <body style={{ margin: 0, background: "#e8daf9" }}>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-8QV64D3784"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'G-8QV64D3784', {
+              send_page_view: true
+            });
+          `}
+        </Script>
+
         <MenuProvider>
           {children}
           <HatchingPopup />
