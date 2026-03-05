@@ -1,4 +1,4 @@
-"use client";
+ï»¿"use client";
 
 import { useState } from "react";
 
@@ -165,7 +165,7 @@ export default function StandPage({ params }) {
                   <div>
                     <div style={{ fontWeight: 600 }}>{item.name}</div>
                     <div style={{ color: "#1c5e57", fontSize: "14px" }}>
-                      {item.variant} — {formatPrice(item.price)}
+                      {item.variant} - {formatPrice(item.price)}
                     </div>
                   </div>
                   <div
@@ -324,7 +324,7 @@ export default function StandPage({ params }) {
                 >
                   <span>
                     {item.name}
-                    {item.variant ? ` (${item.variant})` : ""} ×{item.qty}
+                    {item.variant ? ` (${item.variant})` : ""} x{item.qty}
                   </span>
                   <span>{formatPrice(item.price * item.qty)}</span>
                 </div>
