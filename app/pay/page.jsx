@@ -103,10 +103,13 @@ export default function PayPage() {
     }
   }, []);
 
-  const totalCents = cartItems.reduce(
+  const subtotalCents = cartItems.reduce(
     (sum, item) => sum + item.unitPriceCents * item.qty,
     0
   );
+  const platformFeeCents =
+    subtotalCents > 0 ? Math.round(subtotalCents * 0.029 + 15) : 0;
+  const totalCents = subtotalCents + platformFeeCents;
 
   useEffect(() => {
     if (status !== "ready") return;
@@ -188,6 +191,26 @@ export default function PayPage() {
                   </span>
                 </div>
               ))}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontWeight: 600,
+                }}
+              >
+                <span>Eggs subtotal</span>
+                <span>${(subtotalCents / 100).toFixed(2)}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontWeight: 600,
+                }}
+              >
+                <span>Processing fee</span>
+                <span>${(platformFeeCents / 100).toFixed(2)}</span>
+              </div>
               <div
                 style={{
                   display: "flex",
