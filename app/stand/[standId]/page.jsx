@@ -81,10 +81,13 @@ export default function StandPage({ params }) {
       qty: quantities[item.id],
     }));
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.qty,
+  const subtotalCents = cartItems.reduce(
+    (sum, item) => sum + Math.round(item.price * 100) * item.qty,
     0
   );
+  const platformFeeCents =
+    subtotalCents > 0 ? Math.round(subtotalCents * 0.029 + 15) : 0;
+  const totalCents = subtotalCents + platformFeeCents;
 
   const handleCheckout = () => {
     const cartPayload = cartItems.map((item) => ({
@@ -328,11 +331,34 @@ export default function StandPage({ params }) {
                   borderTop: "1px solid #e1f2ec",
                   paddingTop: "10px",
                   marginTop: "6px",
+                  fontWeight: 600,
+                }}
+              >
+                <span>Eggs subtotal</span>
+                <span>${(subtotalCents / 100).toFixed(2)}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontWeight: 600,
+                }}
+              >
+                <span>Processing fee</span>
+                <span>${(platformFeeCents / 100).toFixed(2)}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  borderTop: "1px solid #e1f2ec",
+                  paddingTop: "10px",
+                  marginTop: "6px",
                   fontWeight: 700,
                 }}
               >
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>${(totalCents / 100).toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -354,7 +380,7 @@ export default function StandPage({ params }) {
             boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
           }}
         >
-          Checkout
+          Checkout • ${(totalCents / 100).toFixed(2)}
         </button>
       </div>
     </div>
