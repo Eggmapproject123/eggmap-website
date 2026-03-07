@@ -1,9 +1,13 @@
 ﻿"use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
-export default function StandPage({ params }) {
-  const { standId } = params;
+export default function StandPage() {
+  const params = useParams();
+  const standId = Array.isArray(params?.standId)
+    ? params.standId[0]
+    : params?.standId || "";
   const [showOtherItems, setShowOtherItems] = useState(false);
   const [quantities, setQuantities] = useState({});
 
@@ -90,6 +94,11 @@ export default function StandPage({ params }) {
   const totalCents = subtotalCents + platformFeeCents;
 
   const handleCheckout = () => {
+    if (!standId) {
+      console.error("Missing standId for checkout.");
+      return;
+    }
+
     const cartPayload = cartItems.map((item) => ({
       id: item.id,
       name: item.name,
