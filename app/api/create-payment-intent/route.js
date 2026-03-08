@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { db } from "../../../lib/firebaseAdmin";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -17,13 +18,22 @@ export async function POST(request) {
   try {
     const items = Array.isArray(body) ? body : body.items || [];
     const standId = !Array.isArray(body) ? body.standId : undefined;
-    const farmerStripeAccountId = !Array.isArray(body)
-      ? body.farmerStripeAccountId
-      : undefined;
 
-    if (!farmerStripeAccountId) {
+    if (!standId) {
+      return Response.json({ error: "Missing standId" }, { status: 400 });
+    }
+
+    const standDoc = await db.collection("stands").doc(standId).get();
+
+    if (!standDoc.exists) {
+      return Response.json({ error: "Stand not found" }, { status: 404 });
+    }
+
+    const stripeAccountId = standDoc.data().stripeAccountId;
+
+    if (!stripeAccountId) {
       return Response.json(
-        { error: "Missing farmerStripeAccountId" },
+        { error: "Stand missing stripeAccountId" },
         { status: 400 }
       );
     }
@@ -64,8 +74,8 @@ export async function POST(request) {
       currency: "usd",
       application_fee_amount: platformFeeCents,
       transfer_data: {
-        destination: farmerStripeAccountId,
-      },
+      destination: stripeAccountId,
+    },
       automatic_payment_methods: { enabled: true },
       metadata: {
         standId: standId ? String(standId) : "unknown",
