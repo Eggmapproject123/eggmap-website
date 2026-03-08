@@ -17,18 +17,13 @@ export async function POST(request) {
   try {
     const items = Array.isArray(body) ? body : body.items || [];
     const standId = !Array.isArray(body) ? body.standId : undefined;
-
-    const standAccountMap = {
-      test123: process.env.STRIPE_TEST_FARMER_ACCOUNT_ID,
-    };
-
-    const farmerStripeAccountId =
-      (standId && standAccountMap[standId]) ||
-      process.env.STRIPE_DEFAULT_FARMER_ACCOUNT_ID;
+    const farmerStripeAccountId = !Array.isArray(body)
+      ? body.farmerStripeAccountId
+      : undefined;
 
     if (!farmerStripeAccountId) {
       return Response.json(
-        { error: "Farmer Stripe account not found for stand." },
+        { error: "Missing farmerStripeAccountId" },
         { status: 400 }
       );
     }
