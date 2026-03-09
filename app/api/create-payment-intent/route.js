@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { getDb } from "../../../lib/firebaseAdmin";
+import { getDatabase } from "../../../lib/firebaseAdmin";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -23,13 +23,17 @@ export async function POST(request) {
       return Response.json({ error: "Missing standId" }, { status: 400 });
     }
 
-    const standDoc = await getDb().collection("stands").doc(standId).get();
+    const snapshot = await getDatabase()
+      .ref(`eggStands/${standId}`)
+      .once("value");
 
-    if (!standDoc.exists) {
+    const stand = snapshot.val();
+
+    if (!stand) {
       return Response.json({ error: "Stand not found" }, { status: 404 });
     }
 
-    const stripeAccountId = standDoc.data().stripeAccountId;
+    const stripeAccountId = stand.stripeAccountId;
 
     if (!stripeAccountId) {
       return Response.json(
