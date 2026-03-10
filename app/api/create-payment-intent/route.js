@@ -3,22 +3,8 @@ import { getDatabase } from "../../../lib/firebaseAdmin";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export async function POST(request) {
-  let body;
-
+const createPaymentIntent = async ({ standId, items }) => {
   try {
-    body = await request.json();
-  } catch (err) {
-    return Response.json(
-      { error: "Invalid JSON payload." },
-      { status: 400 }
-    );
-  }
-
-  try {
-    const items = Array.isArray(body) ? body : body.items || [];
-    const standId = !Array.isArray(body) ? body.standId : undefined;
-
     if (!standId) {
       return Response.json({ error: "Missing standId" }, { status: 400 });
     }
@@ -78,8 +64,8 @@ export async function POST(request) {
       currency: "usd",
       application_fee_amount: platformFeeCents,
       transfer_data: {
-      destination: stripeAccountId,
-    },
+        destination: stripeAccountId,
+      },
       automatic_payment_methods: { enabled: true },
       metadata: {
         standId: standId ? String(standId) : "unknown",
@@ -95,4 +81,51 @@ export async function POST(request) {
       { status: 500 }
     );
   }
+};
+
+export async function POST(request) {
+  let body;
+
+  try {
+    body = await request.json();
+  } catch (err) {
+    return Response.json(
+      { error: "Invalid JSON payload." },
+      { status: 400 }
+    );
+  }
+
+  const items = Array.isArray(body) ? body : body.items || [];
+  const standId = !Array.isArray(body) ? body.standId : undefined;
+
+  return createPaymentIntent({ standId, items });
+}
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const standId = searchParams.get("standId");
+  const amountParam = searchParams.get("amount");
+  const amount = Number(amountParam);
+
+  if (!standId) {
+    return Response.json({ error: "Missing standId" }, { status: 400 });
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return Response.json(
+      { error: "Missing or invalid amount" },
+      { status: 400 }
+    );
+  }
+
+  const items = [
+    {
+      name: "Manual Amount",
+      variantLabel: "Test",
+      qty: 1,
+      unitPriceCents: Math.round(amount),
+    },
+  ];
+
+  return createPaymentIntent({ standId, items });
 }
