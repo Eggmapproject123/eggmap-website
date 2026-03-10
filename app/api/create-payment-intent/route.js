@@ -77,7 +77,7 @@ const createPaymentIntent = async ({ standId, items }) => {
   } catch (err) {
     console.error("Create payment intent failed.", err);
     return Response.json(
-      { error: "Failed to create payment intent." },
+      { error: err?.message || "Failed to create payment intent." },
       { status: 500 }
     );
   }
