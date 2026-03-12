@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { CheckoutConfirmPopup } from "../../../components/HatchingPopup";
 
 export default function StandPage() {
   const params = useParams();
@@ -185,6 +186,7 @@ export default function StandPage() {
         fontFamily: "'Fredoka', sans-serif",
       }}
     >
+      <CheckoutConfirmPopup />
       <div style={{ maxWidth: "680px", margin: "0 auto" }}>
         <div style={{ marginBottom: "18px" }}>
           <div style={{ fontSize: "14px", color: "#4a6f6a" }}>Stand</div>
