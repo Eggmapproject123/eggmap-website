@@ -72,16 +72,6 @@ export function CheckoutConfirmPopup({ onConfirm }) {
         </div>
         <p
           style={{
-            margin: "0 0 10px",
-            fontSize: "16px",
-            color: "#3a225c",
-            lineHeight: 1.5,
-          }}
-        >
-          This payment option is for customers who are already at the stand.
-        </p>
-        <p
-          style={{
             margin: 0,
             fontSize: "16px",
             color: "#3a225c",
