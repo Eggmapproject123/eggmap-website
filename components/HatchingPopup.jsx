@@ -117,7 +117,7 @@ export function CheckoutConfirmPopup({ onConfirm }) {
             fontWeight: 700,
             cursor: "pointer",
             background:
-              "linear-gradient(135deg, #ff2d2d 0%, #ff5a00 35%, #ff8c00 70%, #ffb347 100%)",
+              "radial-gradient(circle at 50% 45%, #ffb347 0%, #ff8c00 45%, #ff5a00 70%, #ff2d2d 100%)",
             boxShadow: buttonShadow,
             transform: buttonTransform,
             transition: "transform 120ms ease, box-shadow 120ms ease",
