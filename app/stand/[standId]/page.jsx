@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function StandPage() {
@@ -8,6 +8,9 @@ export default function StandPage() {
   const standId = Array.isArray(params?.standId)
     ? params.standId[0]
     : params?.standId || "";
+  const [standName, setStandName] = useState("");
+  const [standLoading, setStandLoading] = useState(true);
+  const [standError, setStandError] = useState("");
   const [showOtherItems, setShowOtherItems] = useState(false);
   const [quantities, setQuantities] = useState({});
 
@@ -123,6 +126,55 @@ export default function StandPage() {
     cursor: "pointer",
   };
 
+  useEffect(() => {
+    if (!standId) {
+      setStandName("");
+      setStandError("Missing stand.");
+      setStandLoading(false);
+      return;
+    }
+
+    let isActive = true;
+    setStandLoading(true);
+    setStandError("");
+
+    const loadStand = async () => {
+      try {
+        const response = await fetch(
+          `/api/stands/${encodeURIComponent(standId)}`
+        );
+        if (!response.ok) {
+          let message = "Failed to load stand.";
+          try {
+            const payload = await response.json();
+            if (payload?.error) message = payload.error;
+          } catch (error) {
+            // Ignore JSON parse failures.
+          }
+          throw new Error(message);
+        }
+        const data = await response.json();
+        if (isActive) {
+          setStandName(data?.name || "");
+        }
+      } catch (error) {
+        if (isActive) {
+          setStandName("");
+          setStandError(error?.message || "Failed to load stand.");
+        }
+      } finally {
+        if (isActive) {
+          setStandLoading(false);
+        }
+      }
+    };
+
+    loadStand();
+    return () => {
+      isActive = false;
+    };
+  }, [standId]);
+
   return (
     <div
       style={{
@@ -136,7 +188,11 @@ export default function StandPage() {
       <div style={{ maxWidth: "680px", margin: "0 auto" }}>
         <div style={{ marginBottom: "18px" }}>
           <div style={{ fontSize: "14px", color: "#4a6f6a" }}>Stand</div>
-          <div style={{ fontSize: "22px", fontWeight: 600 }}>{standId}</div>
+          <div style={{ fontSize: "22px", fontWeight: 600 }}>
+            {standLoading
+              ? "Loading stand..."
+              : standName || (standError ? "Stand unavailable" : "Stand")}
+          </div>
         </div>
 
         <section
