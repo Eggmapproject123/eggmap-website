@@ -11,7 +11,7 @@ export async function GET(request, { params }) {
 
   try {
     const db = getDatabase();
-    const snapshot = await db.ref(`eggStands/${standId}`).get();
+    const snapshot = await db.ref(`stands/${standId}`).get();
 
     if (!snapshot.exists()) {
       return Response.json({ error: "Stand not found" }, { status: 404 });

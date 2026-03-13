@@ -1,4 +1,4 @@
-import { admin, getDb } from "../../../lib/firebaseAdmin";
+import { admin, getDatabase } from "../../../lib/firebaseAdmin";
 
 export async function POST(request) {
   let body;
@@ -29,15 +29,15 @@ export async function POST(request) {
 
   try {
     const decoded = await admin.auth().verifyIdToken(idToken);
-    const db = getDb();
-    const standRef = db.collection("stands").doc(standId);
-    const standDoc = await standRef.get();
+    const db = getDatabase();
+    const standRef = db.ref(`stands/${standId}`);
+    const standSnap = await standRef.get();
 
-    if (!standDoc.exists) {
+    if (!standSnap.exists()) {
       return Response.json({ error: "Stand not found" }, { status: 404 });
     }
 
-    const standData = standDoc.data();
+    const standData = standSnap.val();
 
     if (!standData?.ownerUid || standData.ownerUid !== decoded.uid) {
       return Response.json({ error: "Forbidden" }, { status: 403 });

@@ -10,7 +10,7 @@ const createPaymentIntent = async ({ standId, items }) => {
     }
 
     const snapshot = await getDatabase()
-      .ref(`eggStands/${standId}`)
+      .ref(`stands/${standId}`)
       .once("value");
 
     const stand = snapshot.val();
