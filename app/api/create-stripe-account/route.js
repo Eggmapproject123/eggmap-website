@@ -29,8 +29,8 @@ export async function POST(request) {
   }
 
   try {
-    const decoded = await admin.auth().verifyIdToken(idToken);
     const db = getDatabase();
+    const decoded = await admin.auth().verifyIdToken(idToken);
     const standRef = db.ref(`stands/${standId}`);
     const pendingRef = db.ref(`pending_stands/${standId}`);
     const [standSnap, pendingSnap] = await Promise.all([
