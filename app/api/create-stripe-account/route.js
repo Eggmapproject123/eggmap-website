@@ -18,8 +18,8 @@ export async function POST(request) {
     return Response.json({ error: "Missing standId." }, { status: 400 });
   }
 
-  const authHeader = request.headers.get("authorization") || "";
-  const tokenMatch = authHeader.match(/^Bearer\\s+(.+)$/i);
+  const authHeader = request.headers.get("authorization") || "";\n\n  console.log("Authorization header:", authHeader);
+  const tokenMatch = authHeader.match(/^Bearer\s+(.+)$/i);
   const idToken = tokenMatch ? tokenMatch[1] : null;
 
   if (!idToken) {
@@ -30,14 +30,20 @@ export async function POST(request) {
     const decoded = await admin.auth().verifyIdToken(idToken);
     const db = getDatabase();
     const standRef = db.ref(`stands/${standId}`);
-    const standSnap = await standRef.get();
+    const pendingRef = db.ref(`pending_stands/${standId}`);
+    const [standSnap, pendingSnap] = await Promise.all([
+      standRef.get(),
+      pendingRef.get(),
+    ]);
 
     if (!standSnap.exists()) {
       return Response.json({ error: "Stand not found." }, { status: 404 });
     }
 
-    const stand = standSnap.val();
-    if (!stand?.ownerUid || stand.ownerUid !== decoded.uid) {
+    const stand = standSnap.val() || {};
+    const pending = pendingSnap.exists() ? pendingSnap.val() : null;
+    const ownerUid = stand?.ownerUid || pending?.ownerUid;
+    if (!ownerUid || ownerUid !== decoded.uid) {
       return Response.json({ error: "Forbidden." }, { status: 403 });
     }
 
@@ -71,3 +77,4 @@ export async function POST(request) {
     );
   }
 }
+
