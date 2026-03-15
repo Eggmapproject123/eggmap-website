@@ -44,6 +44,11 @@ export async function POST(request) {
 
     const stand = standSnap.val() || {};
     const pending = pendingSnap.exists() ? pendingSnap.val() : null;
+
+    console.log("standId:", standId);
+    console.log("decoded.uid:", decoded.uid);
+    console.log("stand.ownerUid:", stand?.ownerUid);
+    console.log("pending.ownerUid:", pending?.ownerUid);
     const ownerUid = stand?.ownerUid || pending?.ownerUid;
     if (!ownerUid || ownerUid !== decoded.uid) {
       return Response.json({ error: "Forbidden." }, { status: 403 });
