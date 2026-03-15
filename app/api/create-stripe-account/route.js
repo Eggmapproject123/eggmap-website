@@ -18,7 +18,9 @@ export async function POST(request) {
     return Response.json({ error: "Missing standId." }, { status: 400 });
   }
 
-  const authHeader = request.headers.get("authorization") || "";\n\n  console.log("Authorization header:", authHeader);
+  const authHeader = request.headers.get("authorization") || "";
+
+  console.log("Authorization header:", authHeader);
   const tokenMatch = authHeader.match(/^Bearer\s+(.+)$/i);
   const idToken = tokenMatch ? tokenMatch[1] : null;
 
@@ -77,4 +79,6 @@ export async function POST(request) {
     );
   }
 }
+
+
 
