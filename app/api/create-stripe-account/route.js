@@ -5,6 +5,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
   const baseUrl = process.env.BASE_URL || "https://www.eggmapmobile.com";
+  const stripeKey = process.env.STRIPE_SECRET_KEY || "";
+  const stripeKeyMode = stripeKey.startsWith("sk_live_")
+    ? "live"
+    : stripeKey.startsWith("sk_test_")
+      ? "test"
+      : "unknown";
+
+  console.log("stripe_key_mode:", stripeKeyMode);
+  console.log("stripe_key_prefix:", stripeKey.slice(0, 7));
 
   let body;
   try {
@@ -78,6 +87,15 @@ export async function POST(request) {
     });
   } catch (err) {
     console.error("Stripe onboarding failed.", err);
+    console.error("Stripe error details:", {
+      message: err?.message,
+      type: err?.type,
+      code: err?.code,
+      rawType: err?.rawType,
+      requestId: err?.requestId,
+      statusCode: err?.statusCode,
+      raw: err?.raw,
+    });
     return Response.json(
       { error: "Failed to start Stripe onboarding." },
       { status: 500 }
