@@ -64,15 +64,34 @@ export async function POST(request) {
     }
 
     let stripeAccountId = stand.stripeAccountId;
+    let stripeAccount = null;
     if (!stripeAccountId) {
-      const account = await stripe.accounts.create({
+      stripeAccount = await stripe.accounts.create({
         type: "express",
         capabilities: {
           transfers: { requested: true },
         },
       });
-      stripeAccountId = account.id;
+      stripeAccountId = stripeAccount.id;
       await standRef.update({ stripeAccountId });
+    }
+
+    if (!stripeAccount) {
+      stripeAccount = await stripe.accounts.retrieve(stripeAccountId);
+    }
+
+    const detailsSubmitted = stripeAccount.details_submitted === true;
+    const chargesEnabled = stripeAccount.charges_enabled === true;
+
+    console.log("stripe_onboarding_status", {
+      standId,
+      ownerUid,
+      details_submitted: detailsSubmitted,
+      charges_enabled: chargesEnabled,
+    });
+
+    if (detailsSubmitted && chargesEnabled) {
+      await standRef.update({ stripeOnboardingComplete: true });
     }
 
     const accountLink = await stripe.accountLinks.create({
@@ -102,6 +121,3 @@ export async function POST(request) {
     );
   }
 }
-
-
-
