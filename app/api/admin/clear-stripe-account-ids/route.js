@@ -1,4 +1,4 @@
-import { admin, getDatabase } from "../../../lib/firebaseAdmin";
+﻿import { admin, getDatabase } from "../../../../lib/firebaseAdmin";
 
 export async function POST(request) {
   const authHeader = request.headers.get("authorization") || "";
