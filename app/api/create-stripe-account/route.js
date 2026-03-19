@@ -71,6 +71,9 @@ export async function POST(request) {
         capabilities: {
           transfers: { requested: true },
         },
+        business_profile: {
+          product_description: "Fresh eggs and farm products sold locally",
+        },
       });
       stripeAccountId = stripeAccount.id;
       await standRef.update({ stripeAccountId });

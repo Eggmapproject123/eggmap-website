@@ -1,4 +1,17 @@
-﻿export default function OnboardingComplete() {
+'use client';
+
+import { useEffect } from 'react';
+
+export default function OnboardingComplete() {
+  const deepLink = 'eggmap://onboarding-complete';
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = deepLink;
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <main
       style={{
@@ -18,7 +31,7 @@
           If nothing happens automatically, tap the button below.
         </p>
         <a
-          href="eggmap://"
+          href={deepLink}
           style={{
             display: 'inline-block',
             padding: '10px 16px',
