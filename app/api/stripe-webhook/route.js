@@ -1,6 +1,59 @@
 import Stripe from "stripe";
+import { getDatabase } from "../../../lib/firebaseAdmin";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const updateStripeOnboardingStatus = async (account) => {
+  const accountId = account?.id;
+  if (!accountId) return;
+
+  const detailsSubmitted = account.details_submitted === true;
+  const chargesEnabled = account.charges_enabled === true;
+  const complete = detailsSubmitted && chargesEnabled;
+
+  const db = getDatabase();
+  const standsRef = db.ref("stands");
+
+  const updates = {};
+  const standIds = new Set();
+
+  const metadataStandId = account?.metadata?.standId;
+  if (metadataStandId) {
+    const standSnap = await standsRef.child(metadataStandId).get();
+    if (standSnap.exists()) {
+      const stand = standSnap.val() || {};
+      if (stand.stripeAccountId === accountId) {
+        standIds.add(metadataStandId);
+      }
+    }
+  }
+
+  if (standIds.size === 0) {
+    const matchSnap = await standsRef
+      .orderByChild("stripeAccountId")
+      .equalTo(accountId)
+      .get();
+
+    if (matchSnap.exists()) {
+      matchSnap.forEach((child) => {
+        standIds.add(child.key);
+      });
+    }
+  }
+
+  if (standIds.size === 0) {
+    console.warn("stripe_webhook: no stand found for account", accountId);
+    return;
+  }
+
+  for (const standId of standIds) {
+    updates[`${standId}/stripeOnboardingComplete`] = complete;
+    updates[`${standId}/charges_enabled`] = chargesEnabled;
+    updates[`${standId}/details_submitted`] = detailsSubmitted;
+  }
+
+  await standsRef.update(updates);
+};
 
 export async function POST(request) {
   const signature = request.headers.get("stripe-signature");
@@ -19,6 +72,15 @@ export async function POST(request) {
   } catch (err) {
     console.error("Webhook signature verification failed.", err);
     return new Response("Webhook Error", { status: 400 });
+  }
+
+  if (event.type === "account.updated") {
+    const account = event.data.object;
+    try {
+      await updateStripeOnboardingStatus(account);
+    } catch (err) {
+      console.error("stripe_webhook account.updated failed", err);
+    }
   }
 
   if (event.type === "payment_intent.succeeded") {
