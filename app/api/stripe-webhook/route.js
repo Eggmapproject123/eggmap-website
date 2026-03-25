@@ -1,11 +1,13 @@
 import Stripe from "stripe";
 import { getDatabase } from "../../../lib/firebaseAdmin";
 
+export const runtime = "nodejs";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const updateStripeOnboardingStatus = async (account) => {
   const accountId = account?.id;
-  if (!accountId) return;
+  if (!accountId) return { updatedCount: 0 };
 
   const detailsSubmitted = account.details_submitted === true;
   const chargesEnabled = account.charges_enabled === true;
@@ -43,7 +45,7 @@ const updateStripeOnboardingStatus = async (account) => {
 
   if (standIds.size === 0) {
     console.warn("stripe_webhook: no stand found for account", accountId);
-    return;
+    return { updatedCount: 0 };
   }
 
   for (const standId of standIds) {
@@ -53,33 +55,46 @@ const updateStripeOnboardingStatus = async (account) => {
   }
 
   await standsRef.update(updates);
+  return { updatedCount: standIds.size };
 };
 
 export async function POST(request) {
+  console.log("stripe_webhook: request received");
   const signature = request.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!webhookSecret) {
-    console.error("Missing STRIPE_WEBHOOK_SECRET");
+    console.error("stripe_webhook: missing STRIPE_WEBHOOK_SECRET");
     return new Response("Webhook secret not configured.", { status: 500 });
   }
+  console.log("stripe_webhook: signature present", Boolean(signature));
 
   let event;
 
   try {
     const payload = await request.text();
+    console.log("stripe_webhook: payload length", payload.length);
     event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    console.log("stripe_webhook: signature verified");
   } catch (err) {
-    console.error("Webhook signature verification failed.", err);
+    console.error("stripe_webhook: signature verification failed", {
+      message: err?.message,
+      type: err?.type,
+    });
     return new Response("Webhook Error", { status: 400 });
   }
 
   if (event.type === "account.updated") {
     const account = event.data.object;
     try {
-      await updateStripeOnboardingStatus(account);
+      const result = await updateStripeOnboardingStatus(account);
+      console.log("stripe_webhook: account.updated processed", {
+        updatedCount: result?.updatedCount ?? 0,
+      });
     } catch (err) {
-      console.error("stripe_webhook account.updated failed", err);
+      console.error("stripe_webhook: account.updated failed", {
+        message: err?.message,
+      });
     }
   }
 
