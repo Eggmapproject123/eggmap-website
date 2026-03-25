@@ -21,14 +21,14 @@ const updateStripeOnboardingStatus = async (account) => {
   if (metadataStandId) {
     const standSnap = await standsRef.child(metadataStandId).get();
     if (standSnap.exists()) {
-      const stand = standSnap.val() || {};
-      if (stand.stripeAccountId === accountId) {
-        standIds.add(metadataStandId);
-      }
+      standIds.add(metadataStandId);
+    } else {
+      console.warn(
+        "stripe_webhook: metadata standId not found",
+        metadataStandId
+      );
     }
-  }
-
-  if (standIds.size === 0) {
+  } else {
     const matchSnap = await standsRef
       .orderByChild("stripeAccountId")
       .equalTo(accountId)

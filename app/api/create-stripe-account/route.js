@@ -74,6 +74,9 @@ export async function POST(request) {
         business_profile: {
           product_description: "Fresh eggs and farm products sold locally",
         },
+        metadata: {
+          standId,
+        },
       });
       stripeAccountId = stripeAccount.id;
       await standRef.update({ stripeAccountId });
@@ -81,6 +84,15 @@ export async function POST(request) {
 
     if (!stripeAccount) {
       stripeAccount = await stripe.accounts.retrieve(stripeAccountId);
+    }
+
+    if (stripeAccount?.metadata?.standId !== standId) {
+      stripeAccount = await stripe.accounts.update(stripeAccountId, {
+        metadata: {
+          ...stripeAccount?.metadata,
+          standId,
+        },
+      });
     }
 
     const detailsSubmitted = stripeAccount.details_submitted === true;
