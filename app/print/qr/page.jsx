@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 
 export default async function PrintQrPage({ searchParams }) {
-  const standId = searchParams?.standId;
+  const resolvedSearchParams = await searchParams;
+  const standId = resolvedSearchParams?.standId;
 
   if (standId && typeof standId === "string") {
     redirect(`/print/qr/${encodeURIComponent(standId)}`);

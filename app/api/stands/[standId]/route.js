@@ -1,9 +1,10 @@
 import { getDatabase } from "../../../../lib/firebaseAdmin";
 
 export async function GET(request, { params }) {
-  const standId = Array.isArray(params?.standId)
-    ? params.standId[0]
-    : params?.standId;
+  const resolvedParams = await params;
+  const standId = Array.isArray(resolvedParams?.standId)
+    ? resolvedParams.standId[0]
+    : resolvedParams?.standId;
 
   if (!standId) {
     return Response.json({ error: "Missing standId" }, { status: 400 });

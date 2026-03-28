@@ -6,7 +6,10 @@ export const dynamic = "force-dynamic";
 const PAY_QR_BASE_URL = "https://www.eggmapmobile.com/pay";
 
 export default async function PrintQrPage({ params }) {
-  const standId = params?.standId;
+  const resolvedParams = await params;
+  const standId = Array.isArray(resolvedParams?.standId)
+    ? resolvedParams.standId[0]
+    : resolvedParams?.standId;
 
   if (!standId || typeof standId !== "string") {
     return (
