@@ -48,7 +48,6 @@ export default async function PrintQrPage({ params }) {
     );
   }
 
-  const standName = stand?.name || "EggMap Stand";
   const payUrl = `${PAY_QR_BASE_URL}/${encodeURIComponent(standId)}`;
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=700x700&data=${encodeURIComponent(
     payUrl
@@ -58,9 +57,7 @@ export default async function PrintQrPage({ params }) {
     <main style={styles.page}>
       <div style={styles.printArea}>
         <h1 style={styles.header}>Pay Here</h1>
-        <p style={styles.standName}>{standName}</p>
         <img src={qrImageUrl} alt="EggMap QR Code" style={styles.qr} />
-        <p style={styles.url}>{payUrl}</p>
         <p style={styles.footer}>With EggMap</p>
         <PrintButton />
       </div>
@@ -112,12 +109,6 @@ const styles = {
     fontWeight: 800,
     lineHeight: 1.05,
   },
-  standName: {
-    fontSize: "20px",
-    fontWeight: 600,
-    margin: "0 0 18px",
-    color: "#333",
-  },
   qr: {
     width: "320px",
     height: "320px",
@@ -125,12 +116,6 @@ const styles = {
     border: "1px solid #eee",
     borderRadius: "12px",
     background: "#fff",
-  },
-  url: {
-    marginTop: "14px",
-    fontSize: "12px",
-    color: "#555",
-    wordBreak: "break-all",
   },
   footer: {
     marginTop: "16px",
