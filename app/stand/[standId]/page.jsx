@@ -12,54 +12,63 @@ export default function StandPage() {
   const [standName, setStandName] = useState("");
   const [standLoading, setStandLoading] = useState(true);
   const [standError, setStandError] = useState("");
+  const [standProducts, setStandProducts] = useState([]);
   const [showOtherItems, setShowOtherItems] = useState(false);
   const [quantities, setQuantities] = useState({});
 
-  const eggItems = [
-    {
-      name: "Chicken Eggs",
-      variants: [
-        { label: "Dozen", price: 5 },
-        { label: "Half Dozen", price: 3 },
-      ],
-    },
-    {
-      name: "Duck Eggs",
-      variants: [{ label: "Dozen", price: 7 }],
-    },
-    {
-      name: "Quail Eggs",
-      variants: [{ label: "Dozen", price: 6 }],
-    },
-    {
-      name: "Goose Eggs",
-      variants: [{ label: "Dozen", price: 8 }],
-    },
-  ];
+  const formatEggTypeLabel = (value) => {
+    if (!value) return "";
+    const str = String(value);
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
-  const otherItems = [
-    { name: "Bread", price: 7.5 },
-    { name: "Cake Pops", price: 7 },
-    { name: "Maple Syrup", price: 12 },
-  ];
+  const normalizePriceCents = (product) => {
+    if (typeof product?.priceCents === "number") return product.priceCents;
+    const fallback = Number(product?.price);
+    if (!Number.isNaN(fallback)) return Math.round(fallback * 100);
+    return 0;
+  };
 
-  const eggVariantItems = eggItems.flatMap((item) =>
-    item.variants.map((variant) => ({
-      id: `${item.name}__${variant.label}`,
-      name: item.name,
-      variant: variant.label,
-      price: variant.price,
-    }))
+  const buildEggVariantLabel = (product) => {
+    const parts = [];
+    if (product?.packaging) parts.push(product.packaging);
+    if (typeof product?.washed === "boolean") {
+      parts.push(product.washed ? "Washed" : "Unwashed");
+    }
+    return parts.join(" • ");
+  };
+
+  const parsedProducts = Array.isArray(standProducts) ? standProducts : [];
+  const eggProducts = parsedProducts.filter(
+    (product) => product?.type === "egg" || product?.eggType
+  );
+  const customProducts = parsedProducts.filter(
+    (product) => !(product?.type === "egg" || product?.eggType)
   );
 
-  const otherFlatItems = otherItems.map((item) => ({
-    id: item.name,
-    name: item.name,
-    variant: null,
-    price: item.price,
-  }));
+  const eggVariantItems = eggProducts.map((product, index) => {
+    const id = product?.id || `egg_${index}`;
+    const eggType = product?.eggType || product?.name || "";
+    const name = eggType
+      ? `${formatEggTypeLabel(eggType)} Eggs`
+      : "Eggs";
+    const variant = buildEggVariantLabel(product);
+    const price = normalizePriceCents(product) / 100;
 
-  const allItems = [...eggVariantItems, ...otherFlatItems];
+    return { id, name, variant, price };
+  });
+
+  const otherFlatItems = customProducts.map((product, index) => {
+    const id = product?.id || `custom_${index}`;
+    const name = product?.name || product?.title || "Item";
+    const price = normalizePriceCents(product) / 100;
+
+    return { id, name, variant: null, price };
+  });
+
+  const allItems = [...eggVariantItems, ...otherFlatItems].filter(
+    (item) => Number.isFinite(item.price) && item.price > 0
+  );
 
   const adjustQuantity = (id, delta) => {
     setQuantities((prev) => {
@@ -157,11 +166,13 @@ export default function StandPage() {
         const data = await response.json();
         if (isActive) {
           setStandName(data?.name || "");
+          setStandProducts(data?.products || []);
         }
       } catch (error) {
         if (isActive) {
           setStandName("");
           setStandError(error?.message || "Failed to load stand.");
+          setStandProducts([]);
         }
       } finally {
         if (isActive) {
@@ -207,157 +218,170 @@ export default function StandPage() {
           }}
         >
           <h2 style={{ margin: 0, fontSize: "20px" }}>Eggs</h2>
-          <div style={{ marginTop: "14px", display: "grid", gap: "12px" }}>
-            {eggVariantItems.map((item) => {
-              const qty = quantities[item.id] || 0;
+          {eggVariantItems.length === 0 ? (
+            <p style={{ marginTop: "10px", color: "#3e6b64" }}>
+              No egg products listed yet.
+            </p>
+          ) : (
+            <div style={{ marginTop: "14px", display: "grid", gap: "12px" }}>
+              {eggVariantItems.map((item) => {
+                const qty = quantities[item.id] || 0;
 
-              return (
-                <div
-                  key={item.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "12px 14px",
-                    background: "#eafff7",
-                    borderRadius: "12px",
-                    gap: "12px",
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: 600 }}>{item.name}</div>
-                    <div style={{ color: "#1c5e57", fontSize: "14px" }}>
-                      {item.variant} - {formatPrice(item.price)}
-                    </div>
-                  </div>
+                return (
                   <div
+                    key={item.id}
                     style={{
                       display: "flex",
+                      justifyContent: "space-between",
                       alignItems: "center",
-                      gap: "8px",
+                      padding: "12px 14px",
+                      background: "#eafff7",
+                      borderRadius: "12px",
+                      gap: "12px",
                     }}
                   >
-                    <button
-                      type="button"
-                      onClick={() => adjustQuantity(item.id, -1)}
-                      disabled={qty === 0}
-                      style={{
-                        ...quantityButtonStyle,
-                        opacity: qty === 0 ? 0.5 : 1,
-                        cursor: qty === 0 ? "not-allowed" : "pointer",
-                      }}
-                    >
-                      -
-                    </button>
-                    <span style={{ minWidth: "20px", textAlign: "center" }}>
-                      {qty}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => adjustQuantity(item.id, 1)}
-                      style={quantityButtonStyle}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {otherItems.length > 0 && (
-          <section
-            style={{
-              background: "#ffffff",
-              padding: "22px",
-              borderRadius: "16px",
-              boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
-              marginBottom: "24px",
-            }}
-          >
-            <h2 style={{ margin: 0, fontSize: "20px" }}>Other Items</h2>
-            <p style={{ margin: "10px 0 14px", color: "#3e6b64" }}>
-              This stand sells other items
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowOtherItems((prev) => !prev)}
-              style={{
-                padding: "10px 16px",
-                borderRadius: "999px",
-                border: "none",
-                background: "#07ffd6",
-                color: "#004b46",
-                fontWeight: 600,
-                cursor: "pointer",
-                boxShadow: "0 6px 14px rgba(0,0,0,0.12)",
-              }}
-            >
-              See other items
-            </button>
-
-            {showOtherItems && (
-              <div style={{ marginTop: "16px", display: "grid", gap: "10px" }}>
-                {otherFlatItems.map((item) => {
-                  const qty = quantities[item.id] || 0;
-
-                  return (
-                    <div
-                      key={item.id}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "10px 12px",
-                        background: "#f3fffb",
-                        borderRadius: "12px",
-                        gap: "12px",
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontWeight: 600 }}>{item.name}</div>
-                        <div style={{ color: "#1c5e57", fontSize: "14px" }}>
-                          {formatPrice(item.price)}
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => adjustQuantity(item.id, -1)}
-                          disabled={qty === 0}
-                          style={{
-                            ...quantityButtonStyle,
-                            opacity: qty === 0 ? 0.5 : 1,
-                            cursor: qty === 0 ? "not-allowed" : "pointer",
-                          }}
-                        >
-                          -
-                        </button>
-                        <span style={{ minWidth: "20px", textAlign: "center" }}>
-                          {qty}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => adjustQuantity(item.id, 1)}
-                          style={quantityButtonStyle}
-                        >
-                          +
-                        </button>
+                    <div>
+                      <div style={{ fontWeight: 600 }}>{item.name}</div>
+                      <div style={{ color: "#1c5e57", fontSize: "14px" }}>
+                        {item.variant ? `${item.variant} - ` : ""}
+                        {formatPrice(item.price)}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </section>
-        )}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => adjustQuantity(item.id, -1)}
+                        disabled={qty === 0}
+                        style={{
+                          ...quantityButtonStyle,
+                          opacity: qty === 0 ? 0.5 : 1,
+                          cursor: qty === 0 ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        -
+                      </button>
+                      <span style={{ minWidth: "20px", textAlign: "center" }}>
+                        {qty}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => adjustQuantity(item.id, 1)}
+                        style={quantityButtonStyle}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        <section
+          style={{
+            background: "#ffffff",
+            padding: "22px",
+            borderRadius: "16px",
+            boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
+            marginBottom: "24px",
+          }}
+        >
+          <h2 style={{ margin: 0, fontSize: "20px" }}>Other Items</h2>
+          {otherFlatItems.length === 0 ? (
+            <p style={{ marginTop: "10px", color: "#3e6b64" }}>
+              No other items listed yet.
+            </p>
+          ) : (
+            <>
+              <p style={{ margin: "10px 0 14px", color: "#3e6b64" }}>
+                This stand sells other items
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowOtherItems((prev) => !prev)}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: "999px",
+                  border: "none",
+                  background: "#07ffd6",
+                  color: "#004b46",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  boxShadow: "0 6px 14px rgba(0,0,0,0.12)",
+                }}
+              >
+                See other items
+              </button>
+
+              {showOtherItems && (
+                <div style={{ marginTop: "16px", display: "grid", gap: "10px" }}>
+                  {otherFlatItems.map((item) => {
+                    const qty = quantities[item.id] || 0;
+
+                    return (
+                      <div
+                        key={item.id}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "10px 12px",
+                          background: "#f3fffb",
+                          borderRadius: "12px",
+                          gap: "12px",
+                        }}
+                      >
+                        <div>
+                          <div style={{ fontWeight: 600 }}>{item.name}</div>
+                          <div style={{ color: "#1c5e57", fontSize: "14px" }}>
+                            {formatPrice(item.price)}
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => adjustQuantity(item.id, -1)}
+                            disabled={qty === 0}
+                            style={{
+                              ...quantityButtonStyle,
+                              opacity: qty === 0 ? 0.5 : 1,
+                              cursor: qty === 0 ? "not-allowed" : "pointer",
+                            }}
+                          >
+                            -
+                          </button>
+                          <span style={{ minWidth: "20px", textAlign: "center" }}>
+                            {qty}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => adjustQuantity(item.id, 1)}
+                            style={quantityButtonStyle}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </section>
 
         <section
           style={{
