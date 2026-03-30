@@ -20,8 +20,13 @@ export async function GET(request, { params }) {
 
     const stand = snapshot.val();
     const name = stand?.name || stand?.standName || stand?.title || "";
+    const products = Array.isArray(stand?.storeConfig?.products)
+      ? stand.storeConfig.products
+      : stand?.storeConfig?.products
+      ? [stand.storeConfig.products]
+      : [];
 
-    return Response.json({ id: standId, name });
+    return Response.json({ id: standId, name, products });
   } catch (error) {
     console.error("Failed to load stand data:", error);
     return Response.json({ error: "Failed to load stand data" }, { status: 500 });
