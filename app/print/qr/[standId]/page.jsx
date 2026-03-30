@@ -10,8 +10,14 @@ export default async function PrintQrPage({ params }) {
   const standId = Array.isArray(resolvedParams?.standId)
     ? resolvedParams.standId[0]
     : resolvedParams?.standId;
+  const normalizedStandId =
+    typeof standId === "string" ? standId.trim() : "";
 
-  if (!standId || typeof standId !== "string") {
+  if (
+    !normalizedStandId ||
+    normalizedStandId === "undefined" ||
+    normalizedStandId === "null"
+  ) {
     return (
       <main style={styles.page}>
         <div style={styles.card}>
@@ -28,7 +34,7 @@ export default async function PrintQrPage({ params }) {
   let stand = null;
   try {
     const db = getDatabase();
-    const snap = await db.ref(`stands/${standId}`).get();
+    const snap = await db.ref(`stands/${normalizedStandId}`).get();
     stand = snap.exists() ? snap.val() : null;
   } catch (err) {
     stand = null;
@@ -48,7 +54,7 @@ export default async function PrintQrPage({ params }) {
     );
   }
 
-  const payUrl = `${PAY_QR_BASE_URL}/${encodeURIComponent(standId)}`;
+  const payUrl = `${PAY_QR_BASE_URL}/${encodeURIComponent(normalizedStandId)}`;
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=700x700&data=${encodeURIComponent(
     payUrl
   )}`;
