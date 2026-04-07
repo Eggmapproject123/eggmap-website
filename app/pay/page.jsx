@@ -76,6 +76,7 @@ export default function PayPage() {
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
   const [standId, setStandId] = useState("");
+  const [goldenSale, setGoldenSale] = useState(null);
 
   useEffect(() => {
     const storedCart = sessionStorage.getItem("eggmap_cart");
@@ -107,9 +108,53 @@ export default function PayPage() {
     (sum, item) => sum + item.unitPriceCents * item.qty,
     0
   );
+  const nowTs = Date.now();
+  const percentRaw = Number(goldenSale?.percent);
+  const saleActive =
+    goldenSale &&
+    Number.isFinite(percentRaw) &&
+    Number.isFinite(goldenSale?.endsAt) &&
+    nowTs < goldenSale.endsAt;
+  const percentOff = saleActive
+    ? Math.max(0, Math.min(100, Math.round(percentRaw)))
+    : 0;
+  const discountCents =
+    saleActive && subtotalCents > 0
+      ? Math.round((subtotalCents * percentOff) / 100)
+      : 0;
+  const discountedSubtotalCents = Math.max(0, subtotalCents - discountCents);
   const platformFeeCents =
-    subtotalCents > 0 ? Math.round(subtotalCents * 0.029 + 15) : 0;
-  const totalCents = subtotalCents + platformFeeCents;
+    discountedSubtotalCents > 0
+      ? Math.round(discountedSubtotalCents * 0.029 + 15)
+      : 0;
+  const totalCents = discountedSubtotalCents + platformFeeCents;
+
+  useEffect(() => {
+    if (!standId) return;
+    let isActive = true;
+
+    const loadSale = async () => {
+      try {
+        const response = await fetch(
+          `/api/stands/${encodeURIComponent(standId)}`
+        );
+        if (!response.ok) return;
+        const data = await response.json();
+        if (isActive) {
+          setGoldenSale(data?.goldenSale || null);
+        }
+      } catch (err) {
+        if (isActive) {
+          setGoldenSale(null);
+        }
+      }
+    };
+
+    loadSale();
+    return () => {
+      isActive = false;
+    };
+  }, [standId]);
 
   useEffect(() => {
     if (status !== "ready") return;
@@ -155,6 +200,22 @@ export default function PayPage() {
             EggMap Payment
           </div>
         </div>
+        {saleActive && (
+          <div
+            style={{
+              marginBottom: "18px",
+              padding: "10px 14px",
+              borderRadius: "12px",
+              background: "#ffe9cc",
+              color: "#d66500",
+              fontWeight: 700,
+              textAlign: "center",
+              boxShadow: "0 6px 16px rgba(255,153,0,0.25)",
+            }}
+          >
+            Sale price – {percentOff}% OFF
+          </div>
+        )}
 
         <section
           style={{
@@ -198,7 +259,7 @@ export default function PayPage() {
                   fontWeight: 600,
                 }}
               >
-                <span>Eggs subtotal</span>
+                <span>Subtotal</span>
                 <span>${(subtotalCents / 100).toFixed(2)}</span>
               </div>
               <div
@@ -211,6 +272,19 @@ export default function PayPage() {
                 <span>Processing fee</span>
                 <span>${(platformFeeCents / 100).toFixed(2)}</span>
               </div>
+              {saleActive && discountCents > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontWeight: 700,
+                    color: "#d66500",
+                  }}
+                >
+                  <span>Sale discount ({percentOff}% OFF)</span>
+                  <span>- ${(discountCents / 100).toFixed(2)}</span>
+                </div>
+              )}
               <div
                 style={{
                   display: "flex",

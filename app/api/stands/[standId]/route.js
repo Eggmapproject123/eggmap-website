@@ -25,8 +25,9 @@ export async function GET(request, { params }) {
       : stand?.storeConfig?.products
       ? [stand.storeConfig.products]
       : [];
+    const goldenSale = stand?.goldenSale || null;
 
-    return Response.json({ id: standId, name, products });
+    return Response.json({ id: standId, name, products, goldenSale });
   } catch (error) {
     console.error("Failed to load stand data:", error);
     return Response.json({ error: "Failed to load stand data" }, { status: 500 });

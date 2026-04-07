@@ -13,6 +13,7 @@ export default function StandPage() {
   const [standLoading, setStandLoading] = useState(true);
   const [standError, setStandError] = useState("");
   const [standProducts, setStandProducts] = useState([]);
+  const [goldenSale, setGoldenSale] = useState(null);
   const [showOtherItems, setShowOtherItems] = useState(false);
   const [quantities, setQuantities] = useState({});
 
@@ -102,9 +103,26 @@ export default function StandPage() {
     (sum, item) => sum + Math.round(item.price * 100) * item.qty,
     0
   );
+  const nowTs = Date.now();
+  const percentRaw = Number(goldenSale?.percent);
+  const saleActive =
+    goldenSale &&
+    Number.isFinite(percentRaw) &&
+    Number.isFinite(goldenSale?.endsAt) &&
+    nowTs < goldenSale.endsAt;
+  const percentOff = saleActive
+    ? Math.max(0, Math.min(100, Math.round(percentRaw)))
+    : 0;
+  const discountCents =
+    saleActive && subtotalCents > 0
+      ? Math.round((subtotalCents * percentOff) / 100)
+      : 0;
+  const discountedSubtotalCents = Math.max(0, subtotalCents - discountCents);
   const platformFeeCents =
-    subtotalCents > 0 ? Math.round(subtotalCents * 0.029 + 15) : 0;
-  const totalCents = subtotalCents + platformFeeCents;
+    discountedSubtotalCents > 0
+      ? Math.round(discountedSubtotalCents * 0.029 + 15)
+      : 0;
+  const totalCents = discountedSubtotalCents + platformFeeCents;
 
   const handleCheckout = () => {
     if (!standId) {
@@ -167,12 +185,14 @@ export default function StandPage() {
         if (isActive) {
           setStandName(data?.name || "");
           setStandProducts(data?.products || []);
+          setGoldenSale(data?.goldenSale || null);
         }
       } catch (error) {
         if (isActive) {
           setStandName("");
           setStandError(error?.message || "Failed to load stand.");
           setStandProducts([]);
+          setGoldenSale(null);
         }
       } finally {
         if (isActive) {
@@ -207,6 +227,22 @@ export default function StandPage() {
               : standName || (standError ? "Stand unavailable" : "Stand")}
           </div>
         </div>
+        {saleActive && (
+          <div
+            style={{
+              marginBottom: "18px",
+              padding: "10px 14px",
+              borderRadius: "12px",
+              background: "#ffe9cc",
+              color: "#d66500",
+              fontWeight: 700,
+              textAlign: "center",
+              boxShadow: "0 6px 16px rgba(255,153,0,0.25)",
+            }}
+          >
+            Sale price – {percentOff}% OFF
+          </div>
+        )}
 
         <section
           style={{
@@ -425,7 +461,7 @@ export default function StandPage() {
                   fontWeight: 600,
                 }}
               >
-                <span>Eggs subtotal</span>
+                <span>Subtotal</span>
                 <span>${(subtotalCents / 100).toFixed(2)}</span>
               </div>
               <div
@@ -438,6 +474,19 @@ export default function StandPage() {
                 <span>Processing fee</span>
                 <span>${(platformFeeCents / 100).toFixed(2)}</span>
               </div>
+              {saleActive && discountCents > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontWeight: 700,
+                    color: "#d66500",
+                  }}
+                >
+                  <span>Sale discount ({percentOff}% OFF)</span>
+                  <span>- ${(discountCents / 100).toFixed(2)}</span>
+                </div>
+              )}
               <div
                 style={{
                   display: "flex",

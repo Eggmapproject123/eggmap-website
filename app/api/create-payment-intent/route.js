@@ -46,8 +46,27 @@ const createPaymentIntent = async ({ standId, items }) => {
       return Response.json({ error: "Cart is empty." }, { status: 400 });
     }
 
-    const platformFeeCents = Math.round(subtotalCents * 0.029 + 15);
-    const totalAmount = subtotalCents + platformFeeCents;
+    const nowTs = Date.now();
+    const sale = stand?.goldenSale;
+    const percentRaw = Number(sale?.percent);
+    const saleActive =
+      sale &&
+      Number.isFinite(percentRaw) &&
+      Number.isFinite(sale?.endsAt) &&
+      nowTs < sale.endsAt;
+    const percentOff = saleActive
+      ? Math.max(0, Math.min(100, Math.round(percentRaw)))
+      : 0;
+    const discountCents =
+      saleActive && subtotalCents > 0
+        ? Math.round((subtotalCents * percentOff) / 100)
+        : 0;
+    const discountedSubtotalCents = Math.max(0, subtotalCents - discountCents);
+    const platformFeeCents =
+      discountedSubtotalCents > 0
+        ? Math.round(discountedSubtotalCents * 0.029 + 15)
+        : 0;
+    const totalAmount = discountedSubtotalCents + platformFeeCents;
 
     const itemsSummary = normalizedItems
       .map((item) => {
