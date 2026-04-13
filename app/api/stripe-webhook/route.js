@@ -99,6 +99,12 @@ export async function POST(request) {
   }
 if (event.type === "charge.succeeded") {
     const charge = event.data.object;
+    console.log("stripe_webhook: event.type", event.type);
+    console.log("stripe_webhook: event.account", event.account || null);
+    console.log("stripe_webhook: charge.id", charge.id);
+    console.log("stripe_webhook: charge.payment_intent", charge.payment_intent || null);
+    console.log("stripe_webhook: charge.balance_transaction", charge.balance_transaction || null); 
+
     const connectedAccountId = event.account || null;
     const paymentIntentId = charge.payment_intent;
 
@@ -130,6 +136,8 @@ if (event.type === "charge.succeeded") {
       charge?.balance_transaction?.id || charge?.balance_transaction;
 
     if (balanceTxId) {
+     console.log("stripe_webhook: connectedAccountId", connectedAccountId);
+
       const balanceTx = connectedAccountId
         ? await stripe.balanceTransactions.retrieve(
             balanceTxId,
@@ -138,7 +146,13 @@ if (event.type === "charge.succeeded") {
           )
         : await stripe.balanceTransactions.retrieve(balanceTxId);
 
-      stripeFeeCents = balanceTx?.fee || 0;
+      console.log("stripe_webhook: balanceTx raw", balanceTx);
+      console.log("stripe_webhook: balanceTx.id", balanceTx?.id || null);
+      console.log("stripe_webhook: balanceTx.fee", balanceTx?.fee || 0);
+      console.log("stripe_webhook: balanceTx.net", balanceTx?.net || 0);
+      console.log("stripe_webhook: balanceTx.fee_details", balanceTx?.fee_details || []);
+
+      stripeFeeCents = balanceTx?.fee || 0; 
     }
 
     const stripeFeeAllocatedToItemsCents =
