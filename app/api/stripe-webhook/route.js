@@ -97,9 +97,22 @@ export async function POST(request) {
       });
     }
   }
+if (event.type === "charge.succeeded") {
+    const charge = event.data.object;
+    const connectedAccountId = event.account || null;
+    const paymentIntentId = charge.payment_intent;
 
-  if (event.type === "payment_intent.succeeded") {
-    const paymentIntent = event.data.object;
+    if (!paymentIntentId) {
+      return Response.json({ received: true });
+    }
+
+    const paymentIntent = connectedAccountId
+      ? await stripe.paymentIntents.retrieve(
+          paymentIntentId,
+          {},
+          { stripeAccount: connectedAccountId }
+        )
+      : await stripe.paymentIntents.retrieve(paymentIntentId);
 
     const standId = paymentIntent.metadata?.standId || "unknown";
     if (!standId || standId === "unknown") {
@@ -113,35 +126,20 @@ export async function POST(request) {
     const itemsSubtotalCents = Math.max(0, totalCents - platformFeeCents);
 
     let stripeFeeCents = 0;
-    if (paymentIntent.latest_charge) {
-      const connectedAccountId =
-        event.account || paymentIntent.metadata?.stripeAccountId || null;
+    const balanceTxId =
+      charge?.balance_transaction?.id || charge?.balance_transaction;
 
-      const charge = connectedAccountId
-        ? await stripe.charges.retrieve(
-            paymentIntent.latest_charge,
-            { expand: ["balance_transaction"] },
+    if (balanceTxId) {
+      const balanceTx = connectedAccountId
+        ? await stripe.balanceTransactions.retrieve(
+            balanceTxId,
+            {},
             { stripeAccount: connectedAccountId }
           )
-        : await stripe.charges.retrieve(paymentIntent.latest_charge, {
-            expand: ["balance_transaction"],
-          });
+        : await stripe.balanceTransactions.retrieve(balanceTxId);
 
-      const balanceTxId =
-        charge?.balance_transaction?.id || charge?.balance_transaction;
-
-      if (balanceTxId) {
-        const balanceTx = connectedAccountId
-          ? await stripe.balanceTransactions.retrieve(
-              balanceTxId,
-              {},
-              { stripeAccount: connectedAccountId }
-            )
-          : await stripe.balanceTransactions.retrieve(balanceTxId);
-
-        stripeFeeCents = balanceTx?.fee || 0;
-      }
-    } 
+      stripeFeeCents = balanceTx?.fee || 0;
+    }
 
     const stripeFeeAllocatedToItemsCents =
       totalCents > 0
@@ -172,13 +170,6 @@ export async function POST(request) {
       source: "qr_checkout",
       status: "succeeded",
     });
-
-    console.log("stripe_webhook: analytics sale saved", {
-      standId,
-      paymentIntentId: paymentIntent.id,
-      netItemsAfterStripeFeeCents,
-    });
   } 
-
   return Response.json({ received: true });
 }
