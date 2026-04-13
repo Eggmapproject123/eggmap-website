@@ -102,25 +102,60 @@ export async function POST(request) {
     const paymentIntent = event.data.object;
 
     const standId = paymentIntent.metadata?.standId || "unknown";
+    if (!standId || standId === "unknown") {
+      console.warn("stripe_webhook: missing standId, skipping analytics write");
+      return Response.json({ received: true });
+    }
+
     const items = paymentIntent.metadata?.items || "";
     const totalCents = paymentIntent.amount || 0;
     const platformFeeCents = paymentIntent.application_fee_amount || 0;
-    const subtotalCents = totalCents - platformFeeCents;
+    const itemsSubtotalCents = Math.max(0, totalCents - platformFeeCents);
 
-    const order = {
-      orderId: paymentIntent.id,
-      standId,
-      items,
-      subtotalCents,
+    let stripeFeeCents = 0;
+    if (paymentIntent.latest_charge) {
+      const charge = await stripe.charges.retrieve(paymentIntent.latest_charge, {
+        expand: ["balance_transaction"],
+      });
+      stripeFeeCents = charge?.balance_transaction?.fee || 0;
+    }
+
+    const stripeFeeAllocatedToItemsCents =
+      totalCents > 0
+        ? Math.round(stripeFeeCents * (itemsSubtotalCents / totalCents))
+        : 0;
+
+    const netItemsAfterStripeFeeCents = Math.max(
+      0,
+      itemsSubtotalCents - stripeFeeAllocatedToItemsCents
+    );
+
+    const db = getDatabase();
+    const saleRef = db.ref(`analytics/sales/${standId}/${paymentIntent.id}`);
+
+    await saleRef.set({
+      type: "stripe",
+      amount: Number((netItemsAfterStripeFeeCents / 100).toFixed(2)),
+      note: items,
+      timestamp: event.created * 1000,
+      paymentIntentId: paymentIntent.id,
+      currency: paymentIntent.currency || "usd",
+      itemsSubtotalCents,
       platformFeeCents,
       totalCents,
-      status: "pending",
-      createdAt: new Date(event.created * 1000).toISOString(),
-    };
+      stripeFeeCents,
+      stripeFeeAllocatedToItemsCents,
+      netItemsAfterStripeFeeCents,
+      source: "qr_checkout",
+      status: "succeeded",
+    });
 
-    console.log("New EggMap order created", order);
-    // Future step: save orders to a database (Firebase or similar).
-  }
+    console.log("stripe_webhook: analytics sale saved", {
+      standId,
+      paymentIntentId: paymentIntent.id,
+      netItemsAfterStripeFeeCents,
+    });
+  } 
 
   return Response.json({ received: true });
 }
