@@ -69,6 +69,7 @@ export async function POST(request) {
       stripeAccount = await stripe.accounts.create({
         type: "express",
         capabilities: {
+          card_payments: { requested: true },
           transfers: { requested: true },
         },
         business_profile: {
@@ -77,7 +78,7 @@ export async function POST(request) {
         metadata: {
           standId,
         },
-      });
+      }); 
       stripeAccountId = stripeAccount.id;
       await standRef.update({ stripeAccountId });
     }
