@@ -114,11 +114,20 @@ export async function POST(request) {
 
     let stripeFeeCents = 0;
     if (paymentIntent.latest_charge) {
-      const charge = await stripe.charges.retrieve(paymentIntent.latest_charge, {
-        expand: ["balance_transaction"],
-      });
+      const connectedAccountId = event.account || null;
+
+      const charge = connectedAccountId
+        ? await stripe.charges.retrieve(
+            paymentIntent.latest_charge,
+            { expand: ["balance_transaction"] },
+            { stripeAccount: connectedAccountId }
+          )
+        : await stripe.charges.retrieve(paymentIntent.latest_charge, {
+            expand: ["balance_transaction"],
+          });
+
       stripeFeeCents = charge?.balance_transaction?.fee || 0;
-    }
+    } 
 
     const stripeFeeAllocatedToItemsCents =
       totalCents > 0

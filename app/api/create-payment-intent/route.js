@@ -78,19 +78,19 @@ const createPaymentIntent = async ({ standId, items }) => {
       .join(", ")
       .slice(0, 450);
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalAmount,
-      currency: "usd",
-      application_fee_amount: platformFeeCents,
-      transfer_data: {
-        destination: stripeAccountId,
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount: totalAmount,
+        currency: "usd",
+        application_fee_amount: platformFeeCents,
+        automatic_payment_methods: { enabled: true },
+        metadata: {
+          standId: standId ? String(standId) : "unknown",
+          items: itemsSummary || "none",
+        },
       },
-      automatic_payment_methods: { enabled: true },
-      metadata: {
-        standId: standId ? String(standId) : "unknown",
-        items: itemsSummary || "none",
-      },
-    });
+      { stripeAccount: stripeAccountId }
+    ); 
 
     return Response.json({ clientSecret: paymentIntent.client_secret });
   } catch (err) {
