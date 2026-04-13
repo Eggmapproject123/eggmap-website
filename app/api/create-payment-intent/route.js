@@ -92,7 +92,10 @@ const createPaymentIntent = async ({ standId, items }) => {
       { stripeAccount: stripeAccountId }
     ); 
 
-    return Response.json({ clientSecret: paymentIntent.client_secret });
+    return Response.json({
+  clientSecret: paymentIntent.client_secret,
+  stripeAccountId,
+}); 
   } catch (err) {
     console.error("Create payment intent failed.", err);
     return Response.json(

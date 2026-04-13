@@ -9,9 +9,8 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""; 
+
 
 function PaymentForm({ totalCents }) {
   const stripe = useStripe();
@@ -73,6 +72,9 @@ function PaymentForm({ totalCents }) {
 export default function PayPage() {
   const [cartItems, setCartItems] = useState([]);
   const [clientSecret, setClientSecret] = useState("");
+  const [stripePromise, setStripePromise] = useState(null);
+const [stripeAccountId, setStripeAccountId] = useState(""); 
+
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
   const [standId, setStandId] = useState("");
@@ -174,6 +176,13 @@ export default function PayPage() {
         }
 
         setClientSecret(data.clientSecret);
+        setStripeAccountId(data.stripeAccountId || "");
+setStripePromise(
+  loadStripe(
+    stripeKey,
+    data.stripeAccountId ? { stripeAccount: data.stripeAccountId } : undefined
+  )
+); 
       } catch (err) {
         setError(err.message || "Failed to initialize payment.");
         setStatus("error");
@@ -320,13 +329,13 @@ export default function PayPage() {
               Preparing secure payment form...
             </p>
           )}
-          {clientSecret && (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <div style={{ marginTop: "16px" }}>
-                <PaymentForm totalCents={totalCents} />
-              </div>
-            </Elements>
-          )}
+        {clientSecret && stripePromise && (
+  <Elements stripe={stripePromise} options={{ clientSecret }}>
+    <div style={{ marginTop: "16px" }}>
+      <PaymentForm totalCents={totalCents} />
+    </div>
+  </Elements>
+)} 
         </section>
       </div>
     </div>
