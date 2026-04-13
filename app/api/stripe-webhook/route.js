@@ -114,7 +114,8 @@ export async function POST(request) {
 
     let stripeFeeCents = 0;
     if (paymentIntent.latest_charge) {
-      const connectedAccountId = event.account || null;
+      const connectedAccountId =
+        event.account || paymentIntent.metadata?.stripeAccountId || null;
 
       const charge = connectedAccountId
         ? await stripe.charges.retrieve(
@@ -126,7 +127,20 @@ export async function POST(request) {
             expand: ["balance_transaction"],
           });
 
-      stripeFeeCents = charge?.balance_transaction?.fee || 0;
+      const balanceTxId =
+        charge?.balance_transaction?.id || charge?.balance_transaction;
+
+      if (balanceTxId) {
+        const balanceTx = connectedAccountId
+          ? await stripe.balanceTransactions.retrieve(
+              balanceTxId,
+              {},
+              { stripeAccount: connectedAccountId }
+            )
+          : await stripe.balanceTransactions.retrieve(balanceTxId);
+
+        stripeFeeCents = balanceTx?.fee || 0;
+      }
     } 
 
     const stripeFeeAllocatedToItemsCents =
