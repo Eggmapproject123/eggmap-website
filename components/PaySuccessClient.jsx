@@ -121,7 +121,7 @@ if (!response.ok) {
           }}
         >
           <h1 style={{ margin: 0, fontSize: "24px" }}>Payment Successful</h1>
-          <p style={{ marginTop: "12px", color: "#3e6b64" }}>
+          <p style={{ marginTop: "12px", color: "#129745" }}>
             Thank you for supporting local egg stands! Your payment has been
             received.
           </p>
@@ -143,7 +143,7 @@ if (!response.ok) {
             What egg types are still available here?
           </p>
 
-          <p style={{ marginTop: 0, color: "#3e6b64" }}>
+          <p style={{ marginTop: 0, color: "#178626" }}>
             Tap all that still remain.
           </p>
 
@@ -189,13 +189,13 @@ if (!response.ok) {
               borderRadius: "14px",
               border: "none",
               background: tookLastEggs ? "#790000" : "#ff456d",
-              color: "#ffffff",
+              color: "#000000",
               fontWeight: 700,
               cursor: "pointer",
               boxShadow: "0 8px 18px rgba(198,40,40,0.18)",
             }}
           >
-            I took the last eggs/no eggs are here
+            I took the last ones/this stand is out of eggs
           </button>
 
           <button
@@ -209,7 +209,8 @@ if (!response.ok) {
               borderRadius: "14px",
               border: "none",
               background: "#39b56a",
-              color: "#ffffff",
+              color: "#007122",
+              fontSize: "16px",
               fontWeight: 700,
               cursor:
                 !canSubmit || isSubmitting || submitState === "success"
@@ -248,8 +249,8 @@ if (!response.ok) {
               marginTop: "18px",
               padding: "10px 18px",
               borderRadius: "999px",
-              background: "#cd07ff",
-              color: "#241dff",
+              background: "#ac07ff",
+              color: "#ffe346",
               fontWeight: 600,
               textDecoration: "none",
               boxShadow: "0 6px 14px rgba(0,0,0,0.12)",
