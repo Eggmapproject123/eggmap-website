@@ -128,15 +128,11 @@ export default function VerifiedFarmerPage() {
           </div>
 
           <BenefitCard icon="💳" title="QR Code Payments">
-            Every verified stand receives a free laminated QR code with a holder.
-            Customers scan it to pay instantly through EggMap. This feature is
-            <strong> completely free for verified farmers</strong>.
+            When a user owns a verified stand, they recieve their own QR code to print out and put on their egg stand.
+            Customers scan it to pay instantly through EggMap. If you need to re-print your QR code, the link will be in your profile.
+          
           </BenefitCard>
 
-          <BenefitCard icon="🛒" title="Online Ordering">
-            Let customers request and pre-pay for eggs before driving out.
-            Payments only process <strong>after you accept</strong> the order.
-          </BenefitCard>
 
           <BenefitCard icon="📊" title="Stats & Insights">
             See your busiest times, busiest months, and repeat customer patterns
@@ -144,7 +140,7 @@ export default function VerifiedFarmerPage() {
           </BenefitCard>
 
           <BenefitCard icon="🟣" title="Farmers Market Mode">
-            When attending a farmers market, activate Market Mode and appear as a
+            When attending a farmers market, activate Farmers Market Mode and appear as a
             <strong> purple egg</strong> on the map for up to <strong>8 hours</strong>.
           </BenefitCard>
 

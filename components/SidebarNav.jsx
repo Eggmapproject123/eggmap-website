@@ -113,17 +113,7 @@ export default function SidebarNav() {
               Privacy Policy
             </Link>
 
-            <Link
-              href="#"
-              style={linkStyle}
-              onClick={(e) => {
-                e.preventDefault();
-                window.dispatchEvent(new Event("openHatchingPopup"));
-                closeMenu();
-              }}
-            >
-              Create Account
-            </Link>
+        
           </div>
         )}
       </div>
