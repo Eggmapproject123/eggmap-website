@@ -120,7 +120,8 @@ if (!response.ok) {
             marginBottom: "20px",
           }}
         >
-          <h1 style={{ margin: 0, fontSize: "24px" }}>Payment Successful</h1>
+          <h1 style={{ margin: 0, fontSize: "24px", color: "#00bc03" }}>Payment Successful</h1>
+
           <p style={{ marginTop: "12px", color: "#129745" }}>
             Thank you for supporting local egg stands! Your payment has been
             received.
@@ -135,11 +136,13 @@ if (!response.ok) {
             boxShadow: "0 10px 24px rgba(0, 21, 255, 0.08)",
           }}
         >
-          <h2 style={{ margin: 0, fontSize: "22px" }}>
+          <h2 style={{ margin: 0, fontSize: "22px", color: "#8707be" }}>
+
             Help the next customer out:
           </h2>
 
-          <p style={{ marginTop: "12px", marginBottom: "6px", fontWeight: 700 }}>
+          <p style={{ marginTop: "12px", marginBottom: "6px", fontWeight: 700, color: "#ff8a00" }}>
+
             What egg types are still available here?
           </p>
 
@@ -169,6 +172,7 @@ if (!response.ok) {
                     border: selected ? "2px solid #43ddf1" : "2px solid #d7ece3",
                     background: selected ? "#dff7eb" : "#ffffff",
                     color: "#002fff",
+                    fontSize: "20px",
                     fontWeight: 700,
                     cursor: "pointer",
                   }}
@@ -188,7 +192,7 @@ if (!response.ok) {
               padding: "14px 18px",
               borderRadius: "14px",
               border: "none",
-              background: tookLastEggs ? "#790000" : "#ff456d",
+              background: tookLastEggs ? "#d20062" : "#fe2792",
               color: "#000000",
               fontWeight: 700,
               cursor: "pointer",
@@ -210,7 +214,7 @@ if (!response.ok) {
               border: "none",
               background: "#39b56a",
               color: "#007122",
-              fontSize: "16px",
+              fontSize: "20px",
               fontWeight: 700,
               cursor:
                 !canSubmit || isSubmitting || submitState === "success"
