@@ -9,10 +9,9 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 
-const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""; 
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 
-
-function PaymentForm({ totalCents }) {
+function PaymentForm({ totalCents, standId }) {
   const stripe = useStripe();
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +19,6 @@ function PaymentForm({ totalCents }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (!stripe || !elements) return;
 
     setIsSubmitting(true);
@@ -29,7 +27,9 @@ function PaymentForm({ totalCents }) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/pay/success`,
+        return_url: `${window.location.origin}/pay/success?standId=${encodeURIComponent(
+          standId || ""
+        )}`,
       },
     });
 
@@ -73,8 +73,7 @@ export default function PayPage() {
   const [cartItems, setCartItems] = useState([]);
   const [clientSecret, setClientSecret] = useState("");
   const [stripePromise, setStripePromise] = useState(null);
-const [stripeAccountId, setStripeAccountId] = useState(""); 
-
+  const [stripeAccountId, setStripeAccountId] = useState("");
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
   const [standId, setStandId] = useState("");
@@ -97,6 +96,7 @@ const [stripeAccountId, setStripeAccountId] = useState("");
         setStatus("error");
         return;
       }
+
       setCartItems(parsed);
       setStandId(storedStandId || "");
       setStatus("ready");
@@ -110,6 +110,7 @@ const [stripeAccountId, setStripeAccountId] = useState("");
     (sum, item) => sum + item.unitPriceCents * item.qty,
     0
   );
+
   const nowTs = Date.now();
   const percentRaw = Number(goldenSale?.percent);
   const saleActive =
@@ -117,22 +118,28 @@ const [stripeAccountId, setStripeAccountId] = useState("");
     Number.isFinite(percentRaw) &&
     Number.isFinite(goldenSale?.endsAt) &&
     nowTs < goldenSale.endsAt;
+
   const percentOff = saleActive
     ? Math.max(0, Math.min(100, Math.round(percentRaw)))
     : 0;
+
   const discountCents =
     saleActive && subtotalCents > 0
       ? Math.round((subtotalCents * percentOff) / 100)
       : 0;
+
   const discountedSubtotalCents = Math.max(0, subtotalCents - discountCents);
+
   const platformFeeCents =
     discountedSubtotalCents > 0
       ? Math.round(discountedSubtotalCents * 0.029 + 15)
       : 0;
+
   const totalCents = discountedSubtotalCents + platformFeeCents;
 
   useEffect(() => {
     if (!standId) return;
+
     let isActive = true;
 
     const loadSale = async () => {
@@ -141,6 +148,7 @@ const [stripeAccountId, setStripeAccountId] = useState("");
           `/api/stands/${encodeURIComponent(standId)}`
         );
         if (!response.ok) return;
+
         const data = await response.json();
         if (isActive) {
           setGoldenSale(data?.goldenSale || null);
@@ -153,6 +161,7 @@ const [stripeAccountId, setStripeAccountId] = useState("");
     };
 
     loadSale();
+
     return () => {
       isActive = false;
     };
@@ -177,12 +186,14 @@ const [stripeAccountId, setStripeAccountId] = useState("");
 
         setClientSecret(data.clientSecret);
         setStripeAccountId(data.stripeAccountId || "");
-setStripePromise(
-  loadStripe(
-    stripeKey,
-    data.stripeAccountId ? { stripeAccount: data.stripeAccountId } : undefined
-  )
-); 
+        setStripePromise(
+          loadStripe(
+            stripeKey,
+            data.stripeAccountId
+              ? { stripeAccount: data.stripeAccountId }
+              : undefined
+          )
+        );
       } catch (err) {
         setError(err.message || "Failed to initialize payment.");
         setStatus("error");
@@ -209,6 +220,7 @@ setStripePromise(
             EggMap Payment
           </div>
         </div>
+
         {saleActive && (
           <div
             style={{
@@ -236,6 +248,7 @@ setStripePromise(
           }}
         >
           <h2 style={{ margin: 0, fontSize: "20px" }}>Order Summary</h2>
+
           {cartItems.length === 0 ? (
             <p style={{ marginTop: "12px", color: "#3e6b64" }}>
               Cart is empty.
@@ -257,10 +270,11 @@ setStripePromise(
                     {item.qty}
                   </span>
                   <span>
-                    ${(item.unitPriceCents * item.qty / 100).toFixed(2)}
+                    ${((item.unitPriceCents * item.qty) / 100).toFixed(2)}
                   </span>
                 </div>
               ))}
+
               <div
                 style={{
                   display: "flex",
@@ -271,6 +285,7 @@ setStripePromise(
                 <span>Subtotal</span>
                 <span>${(subtotalCents / 100).toFixed(2)}</span>
               </div>
+
               <div
                 style={{
                   display: "flex",
@@ -281,6 +296,7 @@ setStripePromise(
                 <span>Processing fee</span>
                 <span>${(platformFeeCents / 100).toFixed(2)}</span>
               </div>
+
               {saleActive && discountCents > 0 && (
                 <div
                   style={{
@@ -294,6 +310,7 @@ setStripePromise(
                   <span>- ${(discountCents / 100).toFixed(2)}</span>
                 </div>
               )}
+
               <div
                 style={{
                   display: "flex",
@@ -321,23 +338,26 @@ setStripePromise(
           }}
         >
           <h2 style={{ margin: 0, fontSize: "20px" }}>Payment</h2>
+
           {error && (
             <p style={{ marginTop: "12px", color: "#b33a3a" }}>{error}</p>
           )}
+
           {!error && !clientSecret && (
             <p style={{ marginTop: "12px", color: "#3e6b64" }}>
               Preparing secure payment form...
             </p>
           )}
-        {clientSecret && stripePromise && (
-  <Elements stripe={stripePromise} options={{ clientSecret }}>
-    <div style={{ marginTop: "16px" }}>
-      <PaymentForm totalCents={totalCents} />
-    </div>
-  </Elements>
-)} 
+
+          {clientSecret && stripePromise && (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <div style={{ marginTop: "16px" }}>
+                <PaymentForm totalCents={totalCents} standId={standId} />
+              </div>
+            </Elements>
+          )}
         </section>
       </div>
     </div>
   );
-}
+} 
