@@ -192,7 +192,7 @@ if (!response.ok) {
               borderRadius: "14px",
               border: "none",
               background: tookLastEggs ? "#d20000" : "#ff37b2",
-              color: "#ffb5f0",
+              color: "#faa6e9",
               fontSize: "18px",
               fontWeight: 700,
               cursor: "pointer",
