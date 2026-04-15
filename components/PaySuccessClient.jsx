@@ -191,7 +191,7 @@ if (!response.ok) {
               padding: "14px 18px",
               borderRadius: "14px",
               border: "none",
-              background: tookLastEggs ? "#d20069" : "#ff37b2",
+              background: tookLastEggs ? "#a60074" : "#ff37f2",
               color: "#ffffff",
               fontSize: "16px",
               fontWeight: 700,
