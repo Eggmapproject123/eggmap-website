@@ -72,11 +72,23 @@ export default function PaySuccessClient({
         }),
       });
 
-      const data = await response.json();
+     let data = null;
+const rawBody = await response.text();
 
-      if (!response.ok) {
-        throw new Error(data?.error || "Failed to submit stock update.");
-      }
+if (rawBody) {
+  try {
+    data = JSON.parse(rawBody);
+  } catch (parseError) {
+    data = null;
+  }
+}
+
+if (!response.ok) {
+  throw new Error(
+    data?.error || rawBody || "Failed to submit stock update."
+  );
+} 
+
 
       setSubmitState("success");
       setMessage("Thank you. The stock update was submitted.");
@@ -104,13 +116,13 @@ export default function PaySuccessClient({
             background: "#ffffff",
             padding: "26px",
             borderRadius: "16px",
-            boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
+            boxShadow: "0 10px 24px rgba(98, 0, 255, 0.08)",
             marginBottom: "20px",
           }}
         >
           <h1 style={{ margin: 0, fontSize: "24px" }}>Payment Successful</h1>
           <p style={{ marginTop: "12px", color: "#3e6b64" }}>
-            Thanks for supporting local egg stands. Your payment has been
+            Thank you for supporting local egg stands! Your payment has been
             received.
           </p>
         </section>
@@ -120,7 +132,7 @@ export default function PaySuccessClient({
             background: "#ffffff",
             padding: "26px",
             borderRadius: "16px",
-            boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
+            boxShadow: "0 10px 24px rgba(0, 21, 255, 0.08)",
           }}
         >
           <h2 style={{ margin: 0, fontSize: "22px" }}>
@@ -128,7 +140,7 @@ export default function PaySuccessClient({
           </h2>
 
           <p style={{ marginTop: "12px", marginBottom: "6px", fontWeight: 700 }}>
-            What egg types are still available?
+            What egg types are still available here?
           </p>
 
           <p style={{ marginTop: 0, color: "#3e6b64" }}>
@@ -154,9 +166,9 @@ export default function PaySuccessClient({
                   style={{
                     padding: "14px 16px",
                     borderRadius: "14px",
-                    border: selected ? "2px solid #2d8f65" : "2px solid #d7ece3",
+                    border: selected ? "2px solid #43ddf1" : "2px solid #d7ece3",
                     background: selected ? "#dff7eb" : "#ffffff",
-                    color: "#0f3a35",
+                    color: "#002fff",
                     fontWeight: 700,
                     cursor: "pointer",
                   }}
@@ -176,14 +188,14 @@ export default function PaySuccessClient({
               padding: "14px 18px",
               borderRadius: "14px",
               border: "none",
-              background: tookLastEggs ? "#c62828" : "#ef5350",
+              background: tookLastEggs ? "#790000" : "#ff456d",
               color: "#ffffff",
               fontWeight: 700,
               cursor: "pointer",
               boxShadow: "0 8px 18px rgba(198,40,40,0.18)",
             }}
           >
-            I took the last eggs
+            I took the last eggs/no eggs are here
           </button>
 
           <button
@@ -236,8 +248,8 @@ export default function PaySuccessClient({
               marginTop: "18px",
               padding: "10px 18px",
               borderRadius: "999px",
-              background: "#07ffd6",
-              color: "#004b46",
+              background: "#cd07ff",
+              color: "#241dff",
               fontWeight: 600,
               textDecoration: "none",
               boxShadow: "0 6px 14px rgba(0,0,0,0.12)",
