@@ -318,7 +318,7 @@ export default function HatchingPopup() {
               marginBottom: "8px",
             }}
           >
-            Unavailable until April 15, 2026
+            The App is under review by Apple! it will be out very soon! sorry for the delay!
           </strong>
           <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>
            
