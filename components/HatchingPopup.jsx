@@ -1,10 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-// Single source of truth for public launch moment (UTC)
-const LAUNCH_DATE = new Date("2026-04-15T09:00:00").getTime();
-
 export function CheckoutConfirmPopup({ onConfirm }) {
   const [open, setOpen] = useState(true);
   const [pressed, setPressed] = useState(false);
@@ -122,12 +118,6 @@ export function CheckoutConfirmPopup({ onConfirm }) {
 
 export default function HatchingPopup() {
   const [popupOpen, setPopupOpen] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
 
   useEffect(() => {
     const handler = () => setPopupOpen(true);
@@ -135,52 +125,10 @@ export default function HatchingPopup() {
     return () => window.removeEventListener("openHatchingPopup", handler);
   }, []);
 
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = Date.now();
-      const diff = LAUNCH_DATE - now;
-
-      if (diff <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      setTimeLeft({ days, hours, minutes, seconds });
-    };
-
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
   const handleClosePopup = () => {
     setPopupOpen(false);
   };
 
-  const handleAddToCalendar = () => {
-    if (
-      typeof window !== "undefined" &&
-      typeof window.gtag === "function"
-    ) {
-      window.gtag("event", "add_to_calendar_click", {
-        event_category: "engagement",
-        event_label: "hatching_popup",
-      });
-    }
-
-    const url =
-      "https://www.google.com/calendar/render?action=TEMPLATE" +
-      "&text=EggMap%20Launch" +
-      "&dates=20260415T090000Z/20260415T100000Z" +
-      "&details=EggMap%20is%20hatching!%20Come%20back%20and%20see%20all%20the%20local%20egg%20stands." +
-      "&sf=true&output=xml";
-    window.open(url, "_blank");
-  };
 
   if (!popupOpen) return null;
 
@@ -261,7 +209,7 @@ export default function HatchingPopup() {
             textShadow: "0 0 4px rgba(18,227,84,0.4)",
           }}
         >
-          Launching April 15th – 2026!
+          Launching in April – 2026!
         </p>
 
         {/* Green box: ONLY the 3 bullets */}
@@ -318,7 +266,7 @@ export default function HatchingPopup() {
               marginBottom: "8px",
             }}
           >
-            The App is under review by Apple! it will be out very soon! sorry for the delay!
+            The App is under review by Apple! it will be out very soon - apologies for the delay!
           </strong>
           <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>
            
@@ -327,49 +275,6 @@ export default function HatchingPopup() {
           <p style={{ marginTop: "8px", marginBottom: 0 }}>
           </p>
         </div>
-
-        {/* Countdown */}
-        <div
-          style={{
-            marginTop: "22px",
-            fontSize: "34px",
-            fontWeight: "700",
-            fontFamily: "Orbitron, sans-serif",
-            color: "white",
-            letterSpacing: "2px",
-            textShadow: `
-              -2px -2px 0 #0056ff,
-               2px -2px 0 #0056ff,
-              -2px  2px 0 #0056ff,
-               2px  2px 0 #0056ff,
-              0 0 12px #4dc4ff,
-              0 0 22px #4dc4ff,
-              0 0 36px #4dc4ff
-            `,
-          }}
-        >
-          {timeLeft.days}d · {timeLeft.hours}h · {timeLeft.minutes}m ·{" "}
-          {timeLeft.seconds.toString().padStart(2, "0")}s
-        </div>
-
-        {/* Calendar button */}
-        <button
-          onClick={handleAddToCalendar}
-          style={{
-            marginTop: "22px",
-            padding: "12px 22px",
-            borderRadius: "24px",
-            border: "none",
-            background: "#d24dff",
-            color: "white",
-            fontWeight: "700",
-            fontSize: "16px",
-            cursor: "pointer",
-            boxShadow: "0 3px 8px rgba(0,0,0,0.25)",
-          }}
-        >
-          Add launch to my calendar
-        </button>
       </div>
     </div>
   );
