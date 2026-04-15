@@ -120,7 +120,7 @@ if (!response.ok) {
             marginBottom: "20px",
           }}
         >
-          <h1 style={{ margin: 0, fontSize: "24px", color: "#00bc03" }}>Payment Successful</h1>
+          <h1 style={{ margin: 0, fontSize: "24px", color: "#00a803" }}>Payment Successful</h1>
 
           <p style={{ marginTop: "12px", color: "#129745" }}>
             Thank you for supporting local egg stands! Your payment has been
@@ -136,7 +136,7 @@ if (!response.ok) {
             boxShadow: "0 10px 24px rgba(0, 21, 255, 0.08)",
           }}
         >
-          <h2 style={{ margin: 0, fontSize: "22px", color: "#8707be" }}>
+          <h2 style={{ margin: 0, fontSize: "22px", color: "#00810f" }}>
 
             Help the next customer out:
           </h2>
@@ -146,7 +146,7 @@ if (!response.ok) {
             What egg types are still available here?
           </p>
 
-          <p style={{ marginTop: 0, color: "#178626" }}>
+          <p style={{ marginTop: 0, color: "#c14300" }}>
             Tap all that still remain.
           </p>
 
@@ -192,8 +192,9 @@ if (!response.ok) {
               padding: "14px 18px",
               borderRadius: "14px",
               border: "none",
-              background: tookLastEggs ? "#d20062" : "#fe2792",
+              background: tookLastEggs ? "#d20000" : "#fe2727",
               color: "#000000",
+            fontSize: "22px",
               fontWeight: 700,
               cursor: "pointer",
               boxShadow: "0 8px 18px rgba(198,40,40,0.18)",
