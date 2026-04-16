@@ -21,5 +21,8 @@
     "react-dom": "^18.2.0",
     "resend": "^6.8.0",
     "stripe": "^20.4.0"
+  },
+  "devDependencies": {
+    "baseline-browser-mapping": "^2.10.19"
   }
 }

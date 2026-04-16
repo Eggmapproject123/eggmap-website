@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { CheckoutConfirmPopup } from "../../../components/HatchingPopup";
+const MIN_CHECKOUT_SUBTOTAL_CENTS = 300;
 
 export default function StandPage() {
   const params = useParams();
@@ -56,7 +57,8 @@ export default function StandPage() {
     const variant = buildEggVariantLabel(product);
     const price = normalizePriceCents(product) / 100;
 
-    return { id, name, variant, price };
+        return { id, name, variant, price, type: "egg" };
+
   });
 
   const otherFlatItems = customProducts.map((product, index) => {
@@ -64,7 +66,8 @@ export default function StandPage() {
     const name = product?.name || product?.title || "Item";
     const price = normalizePriceCents(product) / 100;
 
-    return { id, name, variant: null, price };
+        return { id, name, variant: null, price, type: "custom" };
+
   });
 
   const allItems = [...eggVariantItems, ...otherFlatItems].filter(
@@ -123,15 +126,19 @@ export default function StandPage() {
       ? Math.round(discountedSubtotalCents * 0.029 + 15)
       : 0;
   const totalCents = discountedSubtotalCents + platformFeeCents;
-
   const handleCheckout = () => {
     if (!standId) {
       console.error("Missing standId for checkout.");
       return;
     }
 
+    if (discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS) {
+      return;
+    }
+
     const cartPayload = cartItems.map((item) => ({
       id: item.id,
+      type: item.type,
       name: item.name,
       variantLabel: item.variant || null,
       unitPriceCents: Math.round(item.price * 100),
@@ -502,11 +509,25 @@ export default function StandPage() {
               </div>
             </div>
           )}
-        </section>
+               </section>
 
-        <button
+        {cartItems.length > 0 && discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS ? (
+          <p
+            style={{
+              margin: "0 0 12px",
+              color: "#b33a3a",
+              fontWeight: 700,
+              textAlign: "center",
+            }}
+          >
+            Minimum checkout subtotal is $3.00 before the EggMap fee.
+          </p>
+        ) : null}
+
+                <button
           type="button"
           onClick={handleCheckout}
+          disabled={discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS}
           style={{
             width: "100%",
             padding: "14px 18px",
@@ -516,12 +537,17 @@ export default function StandPage() {
             color: "#5a3b00",
             fontSize: "18px",
             fontWeight: 700,
-            cursor: "pointer",
+            cursor:
+              discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS
+                ? "not-allowed"
+                : "pointer",
+            opacity: discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS ? 0.6 : 1,
             boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
           }}
         >
           Checkout • ${(totalCents / 100).toFixed(2)}
         </button>
+
       </div>
     </div>
   );

@@ -2,6 +2,9 @@ import Stripe from "stripe";
 import { getDatabase } from "../../../lib/firebaseAdmin";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const MIN_EGG_ITEM_PRICE_CENTS = 300;
+const MIN_CUSTOM_ITEM_PRICE_CENTS = 50;
+const MIN_CHECKOUT_SUBTOTAL_CENTS = 300;
 
 const createPaymentIntent = async ({ standId, items }) => {
   try {
@@ -27,9 +30,9 @@ const createPaymentIntent = async ({ standId, items }) => {
         { status: 400 }
       );
     }
-
     const normalizedItems = items
       .map((item) => ({
+        type: item.type === "egg" ? "egg" : "custom",
         name: item.name,
         variantLabel: item.variantLabel || "",
         qty: Number(item.qty) || 0,
@@ -44,6 +47,24 @@ const createPaymentIntent = async ({ standId, items }) => {
 
     if (!subtotalCents) {
       return Response.json({ error: "Cart is empty." }, { status: 400 });
+    }
+    const underpricedItem = normalizedItems.find((item) => {
+      const minimumCents =
+        item.type === "egg" ? MIN_EGG_ITEM_PRICE_CENTS : MIN_CUSTOM_ITEM_PRICE_CENTS;
+
+      return item.unitPriceCents < minimumCents;
+    });
+
+    if (underpricedItem) {
+      return Response.json(
+        {
+          error:
+            underpricedItem.type === "egg"
+              ? "Egg items must be at least $3.00."
+              : "Non-egg items must be at least $0.50.",
+        },
+        { status: 400 }
+      );
     }
 
     const nowTs = Date.now();
@@ -62,6 +83,15 @@ const createPaymentIntent = async ({ standId, items }) => {
         ? Math.round((subtotalCents * percentOff) / 100)
         : 0;
     const discountedSubtotalCents = Math.max(0, subtotalCents - discountCents);
+        if (discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS) {
+      return Response.json(
+        {
+          error: "Minimum checkout subtotal is $3.00 before the EggMap fee.",
+        },
+        { status: 400 }
+      );
+    }
+
     const platformFeeCents =
       discountedSubtotalCents > 0
         ? Math.round(discountedSubtotalCents * 0.029 + 15)

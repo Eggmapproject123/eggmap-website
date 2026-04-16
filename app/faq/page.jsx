@@ -49,7 +49,8 @@ const customerFaq = [
         <ul style={{ paddingLeft: "20px", marginTop: "6px" }}>
           <li>
             If a customer arrives and takes the last eggs, they mark the stand{" "}
-            <strong>“Out of Stock.”</strong>
+            <strong>“Out of Stock.”</strong> OR, say for instance, if there are still chicken eggs there when they are leaving, 
+            they will click 'chicken eggs in stock' 
           </li>
           <li>
             The timestamp shows how recently that update was made.
