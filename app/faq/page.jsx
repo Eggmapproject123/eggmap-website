@@ -34,9 +34,9 @@ const customerFaq = [
     question: "What is EggMap?",
     answer: (
       <p>
-        EggMap is a live map showing nearby egg stands and what egg types are
-        available at each one — chicken, duck, quail, goose, or other. It also
-        helps you determine if a stand is in or out of stock!
+        EggMap is a live map showing nearby egg stands. EggMap provides information on each stand, such as: where they are located,  what egg types are
+        available, if the stand is in or out of stock, and instant directions to any stand by connecting to your phones gps.
+        
       </p>
     ),
     
@@ -65,15 +65,8 @@ const customerFaq = [
       </>
     ),
   },
-  {
-    question: "Can I pre-order eggs?",
-    answer: (
-      <p>
-        Yes — some verified stands will offer optional online pre-pay so your
-        order is ready when you arrive.
-      </p>
-    ),
-  },
+
+   
   {
     question: "How do I get directions to a stand?",
     answer: (
@@ -142,14 +135,14 @@ const customerFaq = [
     question: "Is my payment information safe?",
     answer: (
       <p>
-        Yes. EggMap processes all payments through <strong>Square</strong>, a
+        Yes. EggMap processes all payments through <strong>Stripe</strong>, a
         trusted, widely used payment platform used by millions of businesses
         nationwide.
       </p>
     ),
   },
   {
-  question: "What does it mean when an egg is gray and transparent on the map?",
+  question: "What does it mean when an egg is grey or transparent on the map?",
   answer: (
     <>
       <p>
@@ -202,8 +195,8 @@ const farmerFaq = [
     question: "How do I become a Verified Farmer?",
     answer: (
       <p>
-        Apply through the EggMap website. Once approved, you’ll receive a free
-        laminated QR code <strong>with a plastic holder</strong> to place at your stand.
+        Find or create your digital eggstand on the App. then, click 'claim this stand' and follow the verification proccess from there. 
+        Once approved, you’ll gain access to all Verification perks and features.
       </p>
     ),
   },
@@ -215,7 +208,7 @@ const farmerFaq = [
         <li>Golden Egg sale mode</li>
         <li>Farmers market visibility mode</li>
         <li>QR code payments</li>
-        <li>Online ordering</li>
+    
         <li>Ratings &amp; photos</li>
         <li>Verified checkmark <VerifiedIcon /> on your stand</li>
         <li>Statistics dashboard</li>
@@ -234,8 +227,8 @@ const farmerFaq = [
     question: "Are QR code payments free for farmers?",
     answer: (
       <p>
-        Yes. Customers pay a small EggMap fee. Farmers keep{" "}
-        <strong>100% of their earnings.</strong>
+        Yes- ish . EggMap uses stripe as our digital payment proccesser. (simmilar to square) like any digital processer, stripe will take a fee of 30 cents + 2.9% from each transation. 
+         to prevent this from being a significant amount of the total purchase, the minimum sale amount to use QR checkout is $3.00.
       </p>
     ),
   },
@@ -263,73 +256,24 @@ const farmerFaq = [
     answer: (
       <p>
         When you attend a farmers market, you can activate Farmers Market Mode.
-        Your stand will appear as a <strong>purple egg</strong> on the map for up
+        Your stand will move to your new location, and appear as a large <strong>purple egg</strong> on the map for up
         to <strong>8 hours</strong>, helping customers find you quickly. This is 
         the only time you can move your stands location on the map.
       </p>
     ),
   },
-  {
-    question: "How does online ordering work?",
-    answer: (
-      <>
-        <p>
-          Customers can <strong>request an order</strong> from your stand. The
-          payment only processes <strong>after you accept</strong> the order.
-        </p>
-        <p>Once accepted, you must:</p>
-        <ol style={{ paddingLeft: "20px", marginTop: "6px" }}>
-          <li>Prepare the order</li>
-          <li>Place it in your stand</li>
-          <li>
-            Bag it in a{" "}
-            <strong>plastic bag labeled with the customer’s name</strong>
-          </li>
-          <li>
-            Upload a <strong>photo of the bag in your stand</strong> to EggMap
-          </li>
-        </ol>
-        <p>
-          This protects you in case of disputes by proving the order was placed
-          correctly.
-        </p>
-      </>
-    ),
-  },
+
   {
     question: "How do I update my stock?",
     answer: (
       <p>
-        You can update your stock instantly through the app. Keeping your stock
-        levels accurate prevents customers from driving out when the stand is
+        You can update your stock instantly through the app, by clicking on you stands icon, and then on the 'update stock' button. Keeping your stock
+         accurate prevents customers from driving out when the stand is
         empty.
       </p>
     ),
   },
-  {
-    question: "Can EggMap help with taxes?",
-    answer: (
-      <p>
-        Yes. Verified Farmers can request organized quarterly earnings summaries
-        to make tax filing simple.
-      </p>
-    ),
-  },
-  {
-    question: "What if my stand has a dispute with a customer?",
-    answer: (
-      <>
-        <p>
-          EggMap reviews each situation fairly. Verified stands follow clear
-          guidelines designed to protect both customers and farmers.
-        </p>
-        <p>
-          Always upload a photo of the labeled order in your stand — this serves
-          as proof that the order was fulfilled properly.
-        </p>
-      </>
-    ),
-  },
+
   {
     question: "Do I get to choose my own prices?",
     answer: (
@@ -344,9 +288,9 @@ const farmerFaq = [
     question: "Is it okay if I have a cash option at my stand as well?",
     answer: (
       <p>
-        Absolutely, of course. We understand that egg stands primarily
-        use cash as their main form of payment. All that we ask is that your
-        EggMap QR code is always visible at your stand as a form of payment.
+        Of course. We understand that egg stands are going to use cash,
+         or even alterintive digital forms of payment. the only reqirement for <strong>Verified Stands</strong> 
+        is to have your EggMap QR code be visible at your stand, as a payment option for customers.
       </p>
     ),
   },
