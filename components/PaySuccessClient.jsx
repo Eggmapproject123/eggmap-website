@@ -123,8 +123,8 @@ export default function PaySuccessClient({
               top: "-16px",
               left: "50%",
               transform: "translateX(-50%)",
-              width: "86px",
-              height: "86px",
+              width: "43px",
+              height: "43px",
               borderRadius: "999px",
               background:
                 "radial-gradient(circle at 30% 30%, #d5ffe8 0%, #8df5a9 50%, #58d978 100%)",
@@ -139,7 +139,7 @@ export default function PaySuccessClient({
           >
             <div
               style={{
-                fontSize: "40px",
+                fontSize: "35px",
                 lineHeight: 1,
                 color: "#ffffff",
                 textShadow: "0 2px 6px rgba(0,0,0,0.18)",
@@ -152,7 +152,7 @@ export default function PaySuccessClient({
           <section
             style={{
               background: "rgba(255,255,255,0.96)",
-              padding: "72px 24px 26px",
+              padding: "48px 24px 18px",
               borderRadius: "32px",
               border: "3px solid #eadbff",
               boxShadow:
@@ -229,7 +229,7 @@ export default function PaySuccessClient({
               style={{
                 margin: 0,
                 fontSize: "23px",
-                color: "#8d19ea",
+                color: "#00d7c9",
                 textShadow: "0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
@@ -243,7 +243,7 @@ export default function PaySuccessClient({
                 fontWeight: 700,
                 fontSize: "18px",
                 lineHeight: 1.2,
-                color: "#ff8500",
+                color: "#4800ff",
               }}
             >
               What egg types are still available here?
@@ -277,7 +277,7 @@ export default function PaySuccessClient({
                     type="button"
                     onClick={() => toggleType(type)}
                     style={{
-                      padding: "15px 16px",
+                      padding: "10px 16px",
                       borderRadius: "22px",
                       border: selected
                         ? "3px solid #64ddf4"
@@ -285,7 +285,7 @@ export default function PaySuccessClient({
                       background: selected
                         ? "linear-gradient(180deg, #dffff4 0%, #c7f1e1 100%)"
                         : "linear-gradient(180deg, #ffffff 0%, #f8fffb 100%)",
-                      color: "#143dff",
+                      color: "#ffdd00",
                       fontSize: "22px",
                       fontWeight: 700,
                       cursor: "pointer",
@@ -311,7 +311,7 @@ export default function PaySuccessClient({
                 borderRadius: "24px",
                 border: "3px solid #ff8ef4",
                 background: tookLastEggs
-                  ? "linear-gradient(180deg, #de37c7 0%, #b91da2 100%)"
+                  ? "linear-gradient(180deg, #af2a9e 0%, #831372 100%)"
                   : "linear-gradient(180deg, #ff4ce8 0%, #ea30d7 100%)",
                 color: "#ffffff",
                 fontSize: "17px",
