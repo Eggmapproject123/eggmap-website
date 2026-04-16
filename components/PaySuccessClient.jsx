@@ -268,7 +268,7 @@ export default function PaySuccessClient({
               style={{
                 margin: 0,
                 fontSize: "25px",
-                color: "#00d7b3",
+                color: "#aa00ff",
                 textShadow: "0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
@@ -322,6 +322,9 @@ export default function PaySuccessClient({
                       borderRadius: "22px",
                       border: typeStyle.border,
                       background: typeStyle.background,
+                      filter: selected ? "brightness(0.82)" : "brightness(1)",
+transition: "filter 120ms ease, transform 120ms ease, box-shadow 120ms ease",
+
                       color: typeStyle.color,
                       fontSize: "22px",
                       fontWeight: 700,
