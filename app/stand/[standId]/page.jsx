@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { CheckoutConfirmPopup } from "../../../components/HatchingPopup";
-const MIN_CHECKOUT_SUBTOTAL_CENTS = 300;
+const MIN_CHECKOUT_SUBTOTAL_CENTS = 280;
 
 export default function StandPage() {
   const params = useParams();
@@ -520,7 +520,7 @@ export default function StandPage() {
               textAlign: "center",
             }}
           >
-            Minimum checkout subtotal is $3.00 before the EggMap fee.
+            Minimum subtotal is $2.80 for QR code checkout.
           </p>
         ) : null}
 

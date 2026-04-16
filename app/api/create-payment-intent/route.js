@@ -2,9 +2,9 @@ import Stripe from "stripe";
 import { getDatabase } from "../../../lib/firebaseAdmin";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const MIN_EGG_ITEM_PRICE_CENTS = 300;
+const MIN_EGG_ITEM_PRICE_CENTS = 350;
 const MIN_CUSTOM_ITEM_PRICE_CENTS = 50;
-const MIN_CHECKOUT_SUBTOTAL_CENTS = 300;
+const MIN_CHECKOUT_SUBTOTAL_CENTS = 280;
 
 const createPaymentIntent = async ({ standId, items }) => {
   try {
@@ -60,7 +60,7 @@ const createPaymentIntent = async ({ standId, items }) => {
         {
           error:
             underpricedItem.type === "egg"
-              ? "Egg items must be at least $3.00."
+              ? "Egg items must be at least $3.50."
               : "Non-egg items must be at least $0.50.",
         },
         { status: 400 }
@@ -86,7 +86,7 @@ const createPaymentIntent = async ({ standId, items }) => {
         if (discountedSubtotalCents < MIN_CHECKOUT_SUBTOTAL_CENTS) {
       return Response.json(
         {
-          error: "Minimum checkout subtotal is $3.00 before the EggMap fee.",
+          error: " subtotal must be at least $2.80 for QR code checkout.",
         },
         { status: 400 }
       );
