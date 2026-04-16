@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useMemo, useState } from "react";
 
 const EGG_TYPES = ["Chicken", "Duck", "Goose", "Quail"];
@@ -20,12 +19,10 @@ export default function PaySuccessClient({
       setStandId(initialStandId);
       return;
     }
-
     const storedStandId =
       typeof window !== "undefined"
         ? sessionStorage.getItem("eggmap_stand_id") || ""
         : "";
-
     if (storedStandId) {
       setStandId(storedStandId);
     }
@@ -99,12 +96,51 @@ export default function PaySuccessClient({
     }
   };
 
+  const typeButtonStyles = {
+    Chicken: {
+      border: "3px solid #71d7f7",
+      background: "linear-gradient(180deg, #c9f6ff 0%, #baf0ff 48%, #a4e7ff 100%)",
+      boxShadow:
+        "0 8px 18px rgba(91, 206, 255, 0.22), inset 0 2px 0 rgba(255,255,255,0.92)",
+      color: "#1d37d8",
+    },
+    Duck: {
+      border: "3px solid #7de7e1",
+      background: "linear-gradient(180deg, #d5fffb 0%, #c4fbf4 48%, #b2f1ea 100%)",
+      boxShadow:
+        "0 8px 18px rgba(97, 224, 214, 0.2), inset 0 2px 0 rgba(255,255,255,0.92)",
+      color: "#2442d9",
+    },
+    Goose: {
+      border: "3px solid #93e2b2",
+      background: "linear-gradient(180deg, #e8ffe7 0%, #daf9d2 48%, #ccf0bf 100%)",
+      boxShadow:
+        "0 8px 18px rgba(123, 213, 140, 0.18), inset 0 2px 0 rgba(255,255,255,0.92)",
+      color: "#243ed4",
+    },
+    Quail: {
+      border: "3px solid #f0d27d",
+      background: "linear-gradient(180deg, #fff7d8 0%, #fff0bf 48%, #fee6a0 100%)",
+      boxShadow:
+        "0 8px 18px rgba(240, 197, 93, 0.18), inset 0 2px 0 rgba(255,255,255,0.92)",
+      color: "#7d28d7",
+    },
+  };
+
   return (
     <div
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(180deg, #f4fff7 0%, #f8fff7 18%, #f8f7ff 50%, #fff9ef 100%)",
+        background: `
+          radial-gradient(circle at 12% 18%, rgba(255,255,255,0.95) 0 2px, transparent 3px),
+          radial-gradient(circle at 88% 12%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+          radial-gradient(circle at 18% 52%, rgba(255,245,186,0.85) 0 2px, transparent 3px),
+          radial-gradient(circle at 82% 64%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+          radial-gradient(circle at 30% 78%, rgba(214,245,255,0.9) 0 2px, transparent 3px),
+          radial-gradient(circle at 70% 84%, rgba(255,255,255,0.92) 0 2px, transparent 3px),
+          linear-gradient(135deg, #eefde9 0%, #f9f6ff 32%, #fff9df 68%, #edfef6 100%)
+        `,
+        backgroundColor: "#f5fff7",
         padding: "28px 16px 40px",
         color: "#15443b",
         fontFamily: "'Fredoka', sans-serif",
@@ -171,7 +207,6 @@ export default function PaySuccessClient({
                 pointerEvents: "none",
               }}
             />
-
             <div style={{ position: "relative" }}>
               <h1
                 style={{
@@ -184,7 +219,6 @@ export default function PaySuccessClient({
               >
                 Payment Successful
               </h1>
-
               <p
                 style={{
                   marginTop: "14px",
@@ -204,7 +238,7 @@ export default function PaySuccessClient({
 
         <section
           style={{
-            background: "rgba(255,255,255,0.96)",
+            background: "rgba(255,255,255,0.94)",
             padding: "24px 22px 28px",
             borderRadius: "32px",
             border: "3px solid #dff6f2",
@@ -218,8 +252,13 @@ export default function PaySuccessClient({
             style={{
               position: "absolute",
               inset: "0",
-              background:
-                "linear-gradient(145deg, rgba(255,255,255,0.55) 0%, rgba(226,255,244,0.38) 40%, rgba(255,245,203,0.22) 100%)",
+              background: `
+                radial-gradient(circle at 10% 14%, rgba(255,255,255,0.9) 0 2px, transparent 3px),
+                radial-gradient(circle at 90% 18%, rgba(255,255,255,0.88) 0 2px, transparent 3px),
+                radial-gradient(circle at 14% 82%, rgba(255,242,186,0.9) 0 2px, transparent 3px),
+                radial-gradient(circle at 86% 76%, rgba(214,245,255,0.85) 0 2px, transparent 3px),
+                linear-gradient(145deg, rgba(255,255,255,0.58) 0%, rgba(226,255,244,0.34) 40%, rgba(255,245,203,0.2) 100%)
+              `,
               pointerEvents: "none",
             }}
           />
@@ -243,7 +282,7 @@ export default function PaySuccessClient({
                 fontWeight: 700,
                 fontSize: "18px",
                 lineHeight: 1.2,
-                color: "#00afce",
+                color: "#007bff",
               }}
             >
               What egg types are still available here?
@@ -253,7 +292,7 @@ export default function PaySuccessClient({
               style={{
                 marginTop: 0,
                 marginBottom: "18px",
-                color: "#0073ff",
+                color: "#0044ff",
                 fontSize: "19px",
               }}
             >
@@ -271,6 +310,7 @@ export default function PaySuccessClient({
             >
               {EGG_TYPES.map((type) => {
                 const selected = selectedTypes.includes(type) && !tookLastEggs;
+                const typeStyle = typeButtonStyles[type];
 
                 return (
                   <button
@@ -280,20 +320,18 @@ export default function PaySuccessClient({
                     style={{
                       padding: "9px 16px",
                       borderRadius: "22px",
-                      border: selected
-                        ? "3px solid #64ddf4"
-                        : "3px solid #d9ebe5",
-                      background: selected
-                        ? "linear-gradient(180deg, #dffff4 0%, #c7f1e1 100%)"
-                        : "linear-gradient(180deg, #ffffff 0%, #f8fffb 100%)",
-                      color: "#ff8000",
+                      border: typeStyle.border,
+                      background: typeStyle.background,
+                      color: typeStyle.color,
                       fontSize: "22px",
                       fontWeight: 700,
                       cursor: "pointer",
                       boxShadow: selected
-                        ? "0 8px 18px rgba(92, 220, 245, 0.22), inset 0 2px 0 rgba(255,255,255,0.9)"
+                        ? `${typeStyle.boxShadow}, 0 0 0 3px rgba(255,255,255,0.78)`
                         : "0 6px 14px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)",
-                      textShadow: "0 1px 0 rgba(255,255,255,0.65)",
+                      textShadow: "0 1px 0 rgba(255,255,255,0.7)",
+                      opacity: tookLastEggs ? 0.72 : 1,
+                      transform: selected ? "translateY(-1px)" : "none",
                     }}
                   >
                     {type}
