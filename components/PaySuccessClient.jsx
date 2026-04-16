@@ -152,7 +152,7 @@ export default function PaySuccessClient({
           <section
             style={{
               background: "rgba(255,255,255,0.96)",
-              padding: "48px 24px 18px",
+              padding: "42px 24px 18px",
               borderRadius: "32px",
               border: "3px solid #eadbff",
               boxShadow:
@@ -228,7 +228,7 @@ export default function PaySuccessClient({
             <h2
               style={{
                 margin: 0,
-                fontSize: "23px",
+                fontSize: "25px",
                 color: "#00d7b3",
                 textShadow: "0 1px 0 rgba(255,255,255,0.9)",
               }}
@@ -243,7 +243,7 @@ export default function PaySuccessClient({
                 fontWeight: 700,
                 fontSize: "18px",
                 lineHeight: 1.2,
-                color: "#00e0ec",
+                color: "#00afce",
               }}
             >
               What egg types are still available here?
@@ -253,8 +253,8 @@ export default function PaySuccessClient({
               style={{
                 marginTop: 0,
                 marginBottom: "18px",
-                color: "#00b3ff",
-                fontSize: "17px",
+                color: "#0073ff",
+                fontSize: "19px",
               }}
             >
               Tap all that still remain.
@@ -265,6 +265,7 @@ export default function PaySuccessClient({
                 display: "grid",
                 gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
                 gap: "14px",
+                fontSize: "16px",
                 marginTop: "10px",
               }}
             >
@@ -277,7 +278,7 @@ export default function PaySuccessClient({
                     type="button"
                     onClick={() => toggleType(type)}
                     style={{
-                      padding: "10px 16px",
+                      padding: "9px 16px",
                       borderRadius: "22px",
                       border: selected
                         ? "3px solid #64ddf4"
