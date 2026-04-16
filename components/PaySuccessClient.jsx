@@ -229,7 +229,7 @@ export default function PaySuccessClient({
               style={{
                 margin: 0,
                 fontSize: "23px",
-                color: "#00d7c9",
+                color: "#00d7b3",
                 textShadow: "0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
@@ -243,7 +243,7 @@ export default function PaySuccessClient({
                 fontWeight: 700,
                 fontSize: "18px",
                 lineHeight: 1.2,
-                color: "#4800ff",
+                color: "#00e0ec",
               }}
             >
               What egg types are still available here?
@@ -253,7 +253,7 @@ export default function PaySuccessClient({
               style={{
                 marginTop: 0,
                 marginBottom: "18px",
-                color: "#228d4d",
+                color: "#00b3ff",
                 fontSize: "17px",
               }}
             >
@@ -285,7 +285,7 @@ export default function PaySuccessClient({
                       background: selected
                         ? "linear-gradient(180deg, #dffff4 0%, #c7f1e1 100%)"
                         : "linear-gradient(180deg, #ffffff 0%, #f8fffb 100%)",
-                      color: "#ffdd00",
+                      color: "#ff8000",
                       fontSize: "22px",
                       fontWeight: 700,
                       cursor: "pointer",
