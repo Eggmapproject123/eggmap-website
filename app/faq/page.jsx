@@ -280,8 +280,8 @@ const farmerFaq = [
     answer: (
       <p>
         Yes. You set your own prices directly on your EggMap stand page. If
-        customers choose to pay with card or through online ordering, EggMap’s
-        small fee is added <strong>on top</strong> of your price.
+        customers choose to pay by scanning the QR code, EggMap’s
+        small fee is added <strong>on top</strong> of your set price.
       </p>
     ),
   },
@@ -289,9 +289,9 @@ const farmerFaq = [
     question: "Is it okay if I have a cash option at my stand as well?",
     answer: (
       <p>
-        Of course. We understand that egg stands are going to use cash,
-         or even alterintive digital forms of payment. the only reqirement for <strong>Verified Stands</strong> 
-        is to have your EggMap QR code be visible at your stand, as a payment option for customers.
+        Of course. We understand that your egg stand will mainly use cash,
+         or even alternative digital forms of payment. the only reqirement for <strong>Verified Stands</strong> 
+        is to have your EggMap QR code be visible at your stand, as a payment <em>option</em> for customers.
       </p>
     ),
   },

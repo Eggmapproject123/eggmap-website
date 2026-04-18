@@ -360,7 +360,7 @@ transition: "filter 120ms ease, transform 120ms ease, box-shadow 120ms ease",
                 fontWeight: 700,
                 cursor: "pointer",
                 boxShadow:
-                  "0 10px 20px rgba(234, 48, 215, 0.26), inset 0 2px 0 rgba(255,255,255,0.22)",
+                  "0 10px 20px rgba(156, 0, 164, 0.78), inset 0 2px 0 rgba(255,255,255,0.22)",
                 textShadow: "0 1px 4px rgba(0,0,0,0.18)",
               }}
             >
