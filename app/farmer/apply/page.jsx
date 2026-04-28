@@ -135,18 +135,17 @@ export default function VerifiedFarmerPage() {
 
 
           <BenefitCard icon="📊" title="Stats & Insights">
-            See your busiest times, busiest months, and repeat customer patterns
-            so you can plan better and sell more.
+            See your busiest times, busiest months, and how often customers find your stand using EggMap.
+            This helps you plan better, and sell more.
           </BenefitCard>
 
           <BenefitCard icon="🟣" title="Farmers Market Mode">
-            When attending a farmers market, activate Farmers Market Mode and appear as a
-            <strong> purple egg</strong> on the map for up to <strong>8 hours</strong>.
+            If you are selling eggs at a farmers market or simmilar event, activate Farmers Market Mode. This will move your virtual egg stand to the location of the event - and your stand will appear as a
+            <strong> large purple egg</strong> on the map for up to <strong>8 hours</strong>.
           </BenefitCard>
 
-          <BenefitCard icon="⚡" title="Instant Payouts & Easy Taxes">
-            Payments go directly to you immediately. EggMap organizes quarterly
-            summaries to make tax filing simple.
+          <BenefitCard icon="⚡" title="Instant Payouts">
+            Payments go directly to you immediately. EggMap also keeps track of your total sales in an <strong>Analytics</strong> page that you can access on your profile.
           </BenefitCard>
 
           {/* CTA */}
@@ -160,29 +159,7 @@ export default function VerifiedFarmerPage() {
               boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
             }}
           >
-            <p style={{ fontSize: "17px", marginBottom: "16px" }}>
-              EggMap officially launches <strong>April 15, 2026</strong>.
-              Verified Farmer applications will open at launch.
-            </p>
-
-            <button
-              onClick={() =>
-                window.dispatchEvent(new Event("openHatchingPopup"))
-              }
-              style={{
-                padding: "14px 26px",
-                borderRadius: "30px",
-                border: "none",
-                background: "#651eff",
-                color: "white",
-                fontSize: "18px",
-                fontWeight: "700",
-                cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
-              }}
-            >
-              Get Verified — Coming Soon
-            </button>
+   
           </div>
         </div>
       </div>
