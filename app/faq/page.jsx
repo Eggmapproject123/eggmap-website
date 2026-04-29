@@ -90,6 +90,7 @@ const customerFaq = [
           Yes. All verified stands display a large{" "}
           <strong>“Pay with EggMap” QR code</strong> at the physical stand. You
           can scan it to pay with Apple Pay, Google Pay, or a card.
+          When customers pay online through EggMap, a small platform fee of $0.15 + 2.9% is added at checkout. This helps support EggMap, and continued app maintenance.  
         </p>
         <p style={{ marginTop: "10px" }}>
           At <strong>unverified stands:</strong>
@@ -228,8 +229,8 @@ const farmerFaq = [
     question: "Are QR code payments free for farmers?",
     answer: (
       <p>
-        Yes- ish . EggMap uses stripe as our digital payment proccesser. (simmilar to square) like any digital processer, stripe will take a fee of 30 cents + 2.9% from each transation. 
-         to prevent this from being a significant amount of the total purchase, the minimum sale amount to use QR checkout is $3.00.
+        Farmers receive the item price, minus the standard payment processing cost. 
+
       </p>
     ),
   },
@@ -279,9 +280,7 @@ const farmerFaq = [
     question: "Do I get to choose my own prices?",
     answer: (
       <p>
-        Yes. You set your own prices directly on your EggMap stand page. If
-        customers choose to pay by scanning the QR code, EggMap’s
-        small fee is added <strong>on top</strong> of your set price.
+        Yes. You set your own prices directly on your EggMap stand page.
       </p>
     ),
   },
