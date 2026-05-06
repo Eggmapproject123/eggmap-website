@@ -90,7 +90,7 @@ const customerFaq = [
           Yes. All verified stands display a large{" "}
           <strong>“Pay with EggMap” QR code</strong> at the physical stand. You
           can scan it to pay with Apple Pay, Google Pay, or a card.
-          When customers pay online through EggMap, a small platform fee of $0.15 + 2.9% is added at checkout. This helps support EggMap, and continued app maintenance.  
+          When customers pay online through EggMap, a small platform fee is added at checkout. This helps support EggMap, and continued app maintenance.  
         </p>
         <p style={{ marginTop: "10px" }}>
           At <strong>unverified stands:</strong>
