@@ -95,20 +95,25 @@ export async function POST(request) {
         },
       });
     }
-
     const detailsSubmitted = stripeAccount.details_submitted === true;
     const chargesEnabled = stripeAccount.charges_enabled === true;
+    const onboardingComplete = chargesEnabled;
 
     console.log("stripe_onboarding_status", {
       standId,
       ownerUid,
       details_submitted: detailsSubmitted,
       charges_enabled: chargesEnabled,
+      stripeOnboardingComplete: onboardingComplete,
     });
 
-    if (detailsSubmitted && chargesEnabled) {
-      await standRef.update({ stripeOnboardingComplete: true });
-    }
+    await standRef.update({
+      charges_enabled: chargesEnabled,
+      details_submitted: detailsSubmitted,
+      stripeChargesEnabled: chargesEnabled,
+      stripeDetailsSubmitted: detailsSubmitted,
+      stripeOnboardingComplete: onboardingComplete,
+    });
 
     const accountLink = await stripe.accountLinks.create({
       account: stripeAccountId,

@@ -28,24 +28,33 @@ export async function GET(request) {
     const account = await stripe.accounts.retrieve(stripeAccountId);
     const detailsSubmitted = account.details_submitted === true;
     const chargesEnabled = account.charges_enabled === true;
+    const onboardingComplete = chargesEnabled;
 
     console.log("stripe_onboarding_status", {
       standId,
       ownerUid: stand.ownerUid || null,
       details_submitted: detailsSubmitted,
       charges_enabled: chargesEnabled,
+      stripeOnboardingComplete: onboardingComplete,
     });
 
-    const complete = detailsSubmitted && chargesEnabled;
-    if (complete && stand.stripeOnboardingComplete !== true) {
-      await standRef.update({ stripeOnboardingComplete: true });
-    }
+    await standRef.update({
+      charges_enabled: chargesEnabled,
+      details_submitted: detailsSubmitted,
+      stripeChargesEnabled: chargesEnabled,
+      stripeDetailsSubmitted: detailsSubmitted,
+      stripeOnboardingComplete: onboardingComplete,
+    });
 
     return Response.json({
-      complete,
+      complete: onboardingComplete,
+      stripeOnboardingComplete: onboardingComplete,
       details_submitted: detailsSubmitted,
       charges_enabled: chargesEnabled,
+      stripeDetailsSubmitted: detailsSubmitted,
+      stripeChargesEnabled: chargesEnabled,
     });
+
   } catch (err) {
     console.error("Stripe onboarding status check failed.", err);
     return Response.json(

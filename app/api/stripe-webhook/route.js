@@ -11,7 +11,7 @@ const updateStripeOnboardingStatus = async (account) => {
 
   const detailsSubmitted = account.details_submitted === true;
   const chargesEnabled = account.charges_enabled === true;
-  const complete = detailsSubmitted && chargesEnabled;
+  const onboardingComplete = chargesEnabled;
 
   const db = getDatabase();
   const standsRef = db.ref("stands");
@@ -49,13 +49,16 @@ const updateStripeOnboardingStatus = async (account) => {
   }
 
   for (const standId of standIds) {
-    updates[`${standId}/stripeOnboardingComplete`] = complete;
+    updates[`${standId}/stripeOnboardingComplete`] = onboardingComplete;
     updates[`${standId}/charges_enabled`] = chargesEnabled;
     updates[`${standId}/details_submitted`] = detailsSubmitted;
+    updates[`${standId}/stripeChargesEnabled`] = chargesEnabled;
+    updates[`${standId}/stripeDetailsSubmitted`] = detailsSubmitted;
   }
 
   await standsRef.update(updates);
   return { updatedCount: standIds.size };
+
 };
 
 export async function POST(request) {
