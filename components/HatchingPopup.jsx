@@ -103,7 +103,7 @@ export function CheckoutConfirmPopup({ onConfirm }) {
             fontWeight: 700,
             cursor: "pointer",
             background:
-              "radial-gradient(circle at 50% 45%, #ffb347 0%, #ff8c00 45%, #ff5a00 70%, #ff2d2d 100%)",
+              "radial-gradient(circle at 50% 45%, #cb5a0e 0%, #ff5601 45%, #ff3c00 70%, #ff2d2d 100%)",
             boxShadow: buttonShadow,
             transform: buttonTransform,
             transition: "transform 120ms ease, box-shadow 120ms ease",
@@ -199,19 +199,6 @@ export default function HatchingPopup() {
           EggMap is hatching soon!
         </h2>
 
-        {/* Launch line */}
-        <p
-          style={{
-            marginTop: "2px",
-            fontSize: "20px",
-            fontWeight: "700",
-            color: "#12e354",
-            textShadow: "0 0 4px rgba(18,227,84,0.4)",
-          }}
-        >
-          Launching in April – 2026!
-        </p>
-
         {/* Green box: ONLY the 3 bullets */}
         <div
           style={{
@@ -242,7 +229,7 @@ export default function HatchingPopup() {
             color: "#1a04c1ff",
           }}
         >
-          EggMap hasn’t officially launched yet, but you can explore what the app will offer
+          EggMap isn't android-ready yet, but you can explore what the app will offer
           right here on the website.
         </p>
 
@@ -266,7 +253,7 @@ export default function HatchingPopup() {
               marginBottom: "8px",
             }}
           >
-            The App is under review by Apple! it will be out very soon - apologies for the delay!
+            The App is under review by Android! It will be approved by june 2026. Until then, EggMap is only available for Iphone.
           </strong>
           <ul style={{ paddingLeft: "18px", margin: "8px 0 0" }}>
            
