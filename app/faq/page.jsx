@@ -2,8 +2,11 @@
 import { useState } from "react";
 import SidebarNav from "../../components/SidebarNav";
 
+const ENABLE_FARMER_FAQ = false;
+
 // Verified Badge Icon
 function VerifiedIcon({ size = 18 }) {
+
   return (
     <span
       style={{
@@ -56,13 +59,7 @@ const customerFaq = [
             The timestamp shows how recently that update was made.
           </li>
         </ul>
-        <p style={{ marginTop: "10px" }}>
-          <strong>Verified Stands</strong> <VerifiedIcon />
-        </p>
-        <p>
-          These stands update their own inventory directly, so their stock status
-          is much more accurate and reliable.
-        </p>
+      
       </>
     ),
   },
@@ -79,28 +76,7 @@ const customerFaq = [
       </>
     ),
   },
-  {
-    question: "Can I pay with a card or Apple Pay?",
-    answer: (
-      <>
-        <p>
-          At <strong>verified stands</strong> <VerifiedIcon />:
-        </p>
-        <p>
-          Yes. All verified stands display a large{" "}
-          <strong>“Pay with EggMap” QR code</strong> at the physical stand. You
-          can scan it to pay with Apple Pay, Google Pay, or a card.
-          When customers pay online through EggMap, a small platform fee is added at checkout. This helps support EggMap, and continued app maintenance.  
-        </p>
-        <p style={{ marginTop: "10px" }}>
-          At <strong>unverified stands:</strong>
-        </p>
-        <p>
-          Card payments may not be available, but cash is usually accepted.
-        </p>
-      </>
-    ),
-  },
+ 
   {
     question: "How do I know what stands are closest to me?",
     answer: (
@@ -110,39 +86,24 @@ const customerFaq = [
       </p>
     ),
   },
-  {
-    question: "What if the stand is empty when I arrive?",
-    answer: (
-      <>
-        <ul style={{ paddingLeft: "20px", marginTop: "6px" }}>
-          <li>
-            At <strong>verified stands</strong> <VerifiedIcon /> this is unlikely, because
-            farmers update their stock in real time.
-          </li>
-          <li>
-            At <strong>unverified stands</strong>, it can be unpredictable —
-            it’s “the wild west.”
-          </li>
-        </ul>
-        <p style={{ marginTop: "10px" }}>
-          If you arrive and the stand is empty, please help the next visitor by
-          marking it <strong>Out of Stock.</strong>
-        </p>
-        <p>It’s not fool-proof, but it is helpful!</p>
-      </>
-    ),
-  },
-  
-  {
-    question: "Is my payment information safe?",
-    answer: (
+{
+  question: "What if the stand is empty when I arrive?",
+  answer: (
+    <>
       <p>
-        Yes. EggMap processes all payments through <strong>Stripe</strong>, a
-        trusted, widely used payment platform used by millions of businesses
-        nationwide.
+        EggMap stock status is community-based and may not always be perfectly accurate, but it is helpful.
       </p>
-    ),
-  },
+      <p>
+        If a customer takes the last eggs, they mark the stand <strong>Out of Stock</strong> for the next person.
+        If eggs are still available, they can mark which types are still there, such as chicken eggs or duck eggs.
+      </p>
+      <p>
+        Each stock update includes a timestamp so you can see how recent it is. Some farmers also keep their own stock status updated.
+      </p>
+    </>
+  ),
+},
+
   {
   question: "What does it mean when an egg is grey or transparent on the map?",
   answer: (
@@ -403,38 +364,43 @@ export default function FaqPage() {
             </div>
           )}
 
-          <button
-            onClick={() =>
-              setActiveSection(activeSection === "farmers" ? null : "farmers")
-            }
-            style={{
-              width: "100%",
-              padding: "14px",
-              borderRadius: "16px",
-              border: "none",
-              fontSize: "18px",
-              fontWeight: "700",
-              background: "#b388ff",
-              cursor: "pointer",
-            }}
-          >
-           FAQ for Verified Farmers <VerifiedIcon size={22} /> 
-          </button>
+               {ENABLE_FARMER_FAQ && (
+            <>
+              <button
+                onClick={() =>
+                  setActiveSection(activeSection === "farmers" ? null : "farmers")
+                }
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  borderRadius: "16px",
+                  border: "none",
+                  fontSize: "18px",
+                  fontWeight: "700",
+                  background: "#b388ff",
+                  cursor: "pointer",
+                }}
+              >
+               FAQ for Verified Farmers <VerifiedIcon size={22} /> 
+              </button>
 
-          {activeSection === "farmers" && (
-            <div
-              style={{
-                background: "white",
-                borderRadius: "18px",
-                padding: "18px",
-                marginTop: "12px",
-              }}
-            >
-              {farmerFaq.map((item, i) => (
-                <AccordionItem key={i} {...item} />
-              ))}
-            </div>
+              {activeSection === "farmers" && (
+                <div
+                  style={{
+                    background: "white",
+                    borderRadius: "18px",
+                    padding: "18px",
+                    marginTop: "12px",
+                  }}
+                >
+                  {farmerFaq.map((item, i) => (
+                    <AccordionItem key={i} {...item} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
+
         </div>
       </div>
     </>

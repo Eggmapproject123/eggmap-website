@@ -1,11 +1,14 @@
 "use client";
 
+const APP_STORE_URL = "https://apps.apple.com/app/id6757963897";
+
 export default function EggHero() {
   const handleLaunchClick = () => {
     window.dispatchEvent(new Event("openHatchingPopup"));
   };
 
   return (
+
     <div
       style={{
         position: "relative",
@@ -61,8 +64,8 @@ export default function EggHero() {
 
       <p
         style={{
-          fontSize: "20px",
-          color: "#ffffffff",
+          fontSize: "35px",
+          color: "rgb(196, 0, 200)",
           marginTop: "10px",
           marginBottom: "45px",
           textShadow: "0px 1px 3px rgba(0,0,0,0.2)",
@@ -71,8 +74,19 @@ export default function EggHero() {
       >
         Find fresh local eggs in seconds.
       </p>
-
-      <div style={{ transform: "translateY(-10px)" }}>
+      <div
+        style={{
+          transform: "translateY(-10px)",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "14px",
+          width: "100%",
+          maxWidth: "440px",
+          padding: "0 16px",
+          boxSizing: "border-box",
+        }}
+      >
         <a
           href="#"
           onClick={(e) => {
@@ -88,11 +102,34 @@ export default function EggHero() {
             fontSize: "20px",
             textDecoration: "none",
             boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.25)",
+            display: "inline-block",
+            textAlign: "center",
+            flex: "1 1 190px",
           }}
         >
-          Launch Map
+          Launch on Android
+        </a>
+
+        <a
+          href={APP_STORE_URL}
+          style={{
+            background: "#6a00ffff",
+            padding: "16px 34px",
+            borderRadius: "30px",
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "20px",
+            textDecoration: "none",
+            boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.25)",
+            display: "inline-block",
+            textAlign: "center",
+            flex: "1 1 190px",
+          }}
+        >
+          Launch on iPhone
         </a>
       </div>
+
     </div>
   );
 }

@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useMenu } from "../app/MenuContext";
 
+const ENABLE_VERIFIED_FARMER = false;
+
 export default function SidebarNav() {
   const { isMenuOpen, toggleMenu } = useMenu();
 
@@ -10,6 +12,7 @@ export default function SidebarNav() {
   };
 
   const linkStyle = {
+
     display: "block",
     padding: "12px 20px",
     background: "#07ffd6ff",
@@ -97,13 +100,16 @@ export default function SidebarNav() {
   How It Works
 </Link>
 
-            <Link href="/farmer/apply" style={linkStyle} onClick={closeMenu}>
-              Become a Verified Farmer
-            </Link>
+             {ENABLE_VERIFIED_FARMER && (
+              <Link href="/farmer/apply" style={linkStyle} onClick={closeMenu}>
+                Become a Verified Farmer
+              </Link>
+            )}
 
             <Link href="/faq" style={linkStyle} onClick={closeMenu}>
               FAQ
             </Link>
+
 
             <Link href="/contact" style={linkStyle} onClick={closeMenu}>
               Contact Us
