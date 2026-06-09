@@ -2,7 +2,6 @@ import { Cherry_Bomb_One } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { MenuProvider } from "./MenuContext";
-import HatchingPopup from "../components/HatchingPopup";
 
 const cherry = Cherry_Bomb_One({
   subsets: ["latin"],
@@ -33,7 +32,6 @@ export default function RootLayout({ children }) {
 
         <MenuProvider>
           {children}
-          <HatchingPopup />
         </MenuProvider>
       </body>
     </html>

@@ -1,11 +1,8 @@
 "use client";
 
 const APP_STORE_URL = "https://apps.apple.com/app/id6757963897";
-
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.anonymous.eggmapmobile";
 export default function EggHero() {
-  const handleLaunchClick = () => {
-    window.dispatchEvent(new Event("openHatchingPopup"));
-  };
 
   return (
 
@@ -87,29 +84,24 @@ export default function EggHero() {
           boxSizing: "border-box",
         }}
       >
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            handleLaunchClick();
-          }}
-          style={{
-            background: "#6a00ffff",
-            padding: "16px 34px",
-            borderRadius: "30px",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "20px",
-            textDecoration: "none",
-            boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.25)",
-            display: "inline-block",
-            textAlign: "center",
-            flex: "1 1 190px",
-          }}
-        >
-          Launch on Android
-        </a>
-
+<a
+  href={PLAY_STORE_URL}
+  style={{
+    background: "#6a00ffff",
+    padding: "16px 34px",
+    borderRadius: "30px",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "20px",
+    textDecoration: "none",
+    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.25)",
+    display: "inline-block",
+    textAlign: "center",
+    flex: "1 1 190px",
+  }}
+>
+  Launch on Android
+</a>
         <a
           href={APP_STORE_URL}
           style={{
