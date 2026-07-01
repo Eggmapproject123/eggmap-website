@@ -97,17 +97,16 @@ export default function VerifiedFarmerPage() {
   </p>
 
   <p style={{ marginTop: "12px", marginBottom: 0 }}>
-    This gives you powerful tools that make your stand more visible to customers —
+    This gives you tools that make your stand more visible to customers —
     helping you sell more eggs and build repeat business.
   </p>
 </div> 
 
           {/* RUN SALES */}
           <BenefitCard icon="🔥" title="Run Sales (Golden Egg)">
-            Every time you run a sale — for example <strong>20% off</strong> —
+            Every time you run a sale — for example <strong>$1 off</strong> —
             your stand’s icon becomes a <strong>large golden egg</strong> on the
-            map. This makes your egg icon stand out, and dramatically
-            increases your chances of being chosen.
+            map. This makes your egg icon stand out to users.
           </BenefitCard>
 
           {/* PHONE IMAGE — DIRECTLY AFTER GOLDEN EGG */}
@@ -127,16 +126,12 @@ export default function VerifiedFarmerPage() {
             />
           </div>
 
-          <BenefitCard icon="💳" title="QR Code Payments">
-            When a user owns a verified stand, they recieve their own QR code to print out and put on their egg stand.
-            Customers scan it to pay instantly through EggMap. If you need to re-print your QR code, the link will be in your profile.
-          
-          </BenefitCard>
+        
 
 
           <BenefitCard icon="📊" title="Stats & Insights">
             See your busiest times, busiest months, and how often customers find your stand using EggMap.
-            This helps you plan better, and sell more.
+            
           </BenefitCard>
 
           <BenefitCard icon="🟣" title="Farmers Market Mode">
@@ -144,8 +139,9 @@ export default function VerifiedFarmerPage() {
             <strong> large purple egg</strong> on the map for up to <strong>8 hours</strong>.
           </BenefitCard>
 
-          <BenefitCard icon="⚡" title="Instant Payouts">
-            Payments go directly to you immediately. EggMap also keeps track of your total sales in an <strong>Analytics</strong> page that you can access on your profile.
+          <BenefitCard icon="⚡" title="control your virtual stand">
+             When you verifiy your stand, it gives you access to delete photos you dont like, change the name of your stand, cutomize your egg avatar, 
+             and create a virtual storefront. The virtual storefront really helps users get to know what goods you sell, and what your prices are.
           </BenefitCard>
 
           {/* CTA */}

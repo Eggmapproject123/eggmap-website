@@ -2,8 +2,7 @@
 import Link from "next/link";
 import { useMenu } from "../app/MenuContext";
 
-const ENABLE_VERIFIED_FARMER = false;
-
+const ENABLE_VERIFIED_FARMER = true;
 export default function SidebarNav() {
   const { isMenuOpen, toggleMenu } = useMenu();
 

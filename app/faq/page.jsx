@@ -2,8 +2,7 @@
 import { useState } from "react";
 import SidebarNav from "../../components/SidebarNav";
 
-const ENABLE_FARMER_FAQ = false;
-
+const ENABLE_FARMER_FAQ = true;
 // Verified Badge Icon
 function VerifiedIcon({ size = 18 }) {
 
@@ -154,12 +153,29 @@ const customerFaq = [
   },
 ]; 
 const farmerFaq = [
+
+
   {
+
+
+    
+    question: "what is Farmer verification?",
+    answer: (
+      <p>
+        Farmer Verification is when the owner of a farm stand that exsits on EggMap, chooses to 'claim' their virtual stand. 
+      </p>
+    ),
+  },
+
+  {
+
+
+    
     question: "How do I become a Verified Farmer?",
     answer: (
       <p>
         Find or create your digital eggstand on the App. then, click 'claim this stand' and follow the verification proccess from there. 
-        Once approved, you’ll gain access to all Verification perks and features.
+        Once approved, you’ll gain full control over your farm stand.
       </p>
     ),
   },
@@ -170,12 +186,11 @@ const farmerFaq = [
       <ul style={{ paddingLeft: "35px", margin: 0 }}>
         <li>Golden Egg sale mode</li>
         <li>Farmers market visibility mode</li>
-        <li>QR code payments</li>
-    
+      
         <li>Ratings &amp; photos</li>
         <li>Verified checkmark <VerifiedIcon /> on your stand</li>
         <li>Statistics dashboard</li>
-        <li>Instant payouts</li>
+        
       </ul>
 
       <p style={{ marginTop: "10px" }}>
@@ -186,21 +201,13 @@ const farmerFaq = [
   ),
 }, 
 
-  {
-    question: "Are QR code payments free for farmers?",
-    answer: (
-      <p>
-        Farmers receive the item price, minus the standard payment processing cost. 
-
-      </p>
-    ),
-  },
+  
   {
     question: "How do Golden Egg sales work?",
     answer: (
       <>
         <p>
-          you can choose to run a sale (for example, <strong>20% off</strong>) up to{" "}
+          you can choose to run a sale (for example, <strong>$1 off</strong>) up to{" "}
           <strong>three times per week.</strong>
         </p>
         <p>
@@ -238,23 +245,15 @@ const farmerFaq = [
   },
 
   {
-    question: "Do I get to choose my own prices?",
+    question: "what is mystore?",
     answer: (
       <p>
-        Yes. You set your own prices directly on your EggMap stand page.
+        My store is list of items and prices, created by you, so that your customers can get those specific details on what you have availble. 
+        when a user clicks on your stand, they can see your list of items and their prices.
       </p>
     ),
   },
-  {
-    question: "Is it okay if I have a cash option at my stand as well?",
-    answer: (
-      <p>
-        Of course. We understand that your egg stand will mainly use cash,
-         or even alternative digital forms of payment. the only reqirement for <strong>Verified Stands</strong> 
-        is to have your EggMap QR code be visible at your stand, as a payment <em>option</em> for customers.
-      </p>
-    ),
-  },
+
 ]; 
 
 /* ---------------- COMPONENTS ---------------- */
