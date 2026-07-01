@@ -162,7 +162,7 @@ const farmerFaq = [
     question: "what is Farmer verification?",
     answer: (
       <p>
-        Farmer Verification is when the owner of a farm stand that exsits on EggMap, chooses to 'claim' their virtual stand. 
+        Farmer Verification is when the owner of a farm stand chooses to 'claim' their virtual stand. 
       </p>
     ),
   },
@@ -174,7 +174,7 @@ const farmerFaq = [
     question: "How do I become a Verified Farmer?",
     answer: (
       <p>
-        Find or create your digital eggstand on the App. then, click 'claim this stand' and follow the verification proccess from there. 
+        Find or create your digital eggstand on the app. Then, click 'claim this stand' and follow the verification proccess from there. 
         Once approved, you’ll gain full control over your farm stand.
       </p>
     ),
@@ -187,7 +187,7 @@ const farmerFaq = [
         <li>Golden Egg sale mode</li>
         <li>Farmers market visibility mode</li>
       
-        <li>Ratings &amp; photos</li>
+        <li>Virtual storefront</li>
         <li>Verified checkmark <VerifiedIcon /> on your stand</li>
         <li>Statistics dashboard</li>
         

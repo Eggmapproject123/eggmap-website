@@ -139,8 +139,8 @@ export default function VerifiedFarmerPage() {
             <strong> large purple egg</strong> on the map for up to <strong>8 hours</strong>.
           </BenefitCard>
 
-          <BenefitCard icon="⚡" title="control your virtual stand">
-             When you verifiy your stand, it gives you access to delete photos you dont like, change the name of your stand, cutomize your egg avatar, 
+          <BenefitCard icon="⚡" title="Control your Virtual Stand">
+             When you verifiy your stand, it gives you permission to: delete photos you dont like, change the name of your stand, cutomize your egg avatar, 
              and create a virtual storefront. The virtual storefront really helps users get to know what goods you sell, and what your prices are.
           </BenefitCard>
 
